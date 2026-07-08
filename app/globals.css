@@ -48,10 +48,10 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 .band .logo .sub{font-family:var(--font-utility);font-size:10px;letter-spacing:.5em;
   background:var(--seaglass);color:var(--band-deep);padding:2px 12px;border-radius:2px;font-weight:500}
 .band .corner{position:absolute;top:0;right:0;height:100%;aspect-ratio:1.55;
-  background:var(--band-deep);border-bottom-left-radius:100% 220%;
-  display:flex;align-items:center;justify-content:flex-end;padding-right:clamp(18px,3vw,38px)}
+  background:var(--band-deep);border-bottom-left-radius:100% 220%;overflow:hidden;
+  display:flex;align-items:center;justify-content:flex-end;padding-right:clamp(16px,2.4vw,30px)}
 .band .corner .num{font-family:var(--font-display);font-style:italic;font-weight:600;
-  font-size:clamp(40px,6vw,64px);color:#F6EFE0;line-height:.8}
+  font-size:clamp(30px,4vw,44px);color:rgba(246,239,224,.9);line-height:1}
 
 /* ---------- 主导航（刊头下方细带） ---------- */
 .cove-nav{position:fixed;top:66px;left:0;right:0;z-index:19;
