@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
 export const revalidate = 120;
-export const metadata = { title: '每日音乐节 · Seacove' };
+export const metadata = { title: '每日演出 · Cove' };
 
 const STATUS_CN = { open: '召集中', locked: '已截稿', completed: '已成行' };
 
@@ -19,7 +19,7 @@ export default async function FestivalPage() {
     <main className="sheet">
       <div className="sheet-head">
         <div className="no">Festival</div>
-        <div className="th">每日音乐节</div>
+        <div className="th">每日演出</div>
         <div className="sub">
           制作人在这里发出邀请函，为一场具体的演出召集乐手、歌手与词曲作者。<br />
           截稿之前，报名随时可改；截稿之后，名单交给海。
