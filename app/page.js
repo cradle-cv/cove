@@ -22,14 +22,14 @@ export default async function HomePage() {
   return (
     <main className="home">
       <section className="home-hero">
-        <div className="hero-eyebrow">从海面下打捞每一首歌的故事</div>
+        <div className="hero-eyebrow">音乐人的避风港，也是一座灵感的灯塔</div>
         <div className="hero-logo">
           <img className="hero-tri" src="/logo-tri.png" alt="海角 Cove" />
           <img className="hero-word" src="/logo-text.png" alt="" />
         </div>
         <p className="hero-tagline">
-          每一期，像一封从海角寄来的信。<br />
-          拆开它，读几首歌，和它们没被讲完的来历。
+          这里不做推荐，不追热榜。<br />
+          歌可以慢慢写，故事可以慢慢讲，人可以慢慢遇见。
         </p>
       </section>
 
@@ -69,6 +69,10 @@ export default async function HomePage() {
       </section>
 
       <section className="home-links">
+        <Link href="/festival">
+          <span className="hl-cn">每日演出</span>
+          <span className="hl-desc">一张邀请函，等你回应</span>
+        </Link>
         <Link href="/records">
           <span className="hl-cn">海角唱片行</span>
           <span className="hl-desc">收录每一期的歌与故事</span>
@@ -77,9 +81,9 @@ export default async function HomePage() {
           <span className="hl-cn">原创码头</span>
           <span className="hl-desc">停靠音乐人的原创与手记</span>
         </Link>
-        <Link href="/radio">
-          <span className="hl-cn">海角电台</span>
-          <span className="hl-desc">记录不赶时间的对话</span>
+        <Link href="/musicians">
+          <span className="hl-cn">音乐人</span>
+          <span className="hl-desc">在这里遇见同路的人</span>
         </Link>
       </section>
     </main>
