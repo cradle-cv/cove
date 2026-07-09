@@ -39,6 +39,18 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 .band{position:fixed;top:0;left:0;right:0;z-index:20;background:var(--band);
   color:#F6EFE0;padding:14px clamp(20px,4vw,46px);display:flex;align-items:center;
   justify-content:space-between;overflow:hidden}
+.band .band-avatar{display:flex;align-items:center;text-decoration:none;flex:0 0 auto}
+.band .band-avatar .avatar-dot{width:34px;height:34px;border-radius:50%;
+  border:1.5px solid rgba(246,239,224,.55);background:rgba(246,239,224,.08);
+  display:block;transition:border-color .2s,background .2s}
+.band .band-avatar:hover .avatar-dot{border-color:#F6EFE0;background:rgba(246,239,224,.16)}
+.band .band-nav{display:flex;gap:clamp(16px,2.4vw,32px);align-items:center;flex:1 1 auto;
+  justify-content:center;padding:0 clamp(16px,3vw,44px)}
+.band .band-nav a{color:rgba(246,239,224,.82);text-decoration:none;font-size:14px;letter-spacing:.14em;white-space:nowrap;transition:color .2s}
+.band .band-nav a:hover{color:#F6EFE0}
+.band .brand-right{display:flex;align-items:center;gap:13px;text-decoration:none;color:inherit;flex:0 0 auto}
+.band .brand-right .brand-mark{height:52px;width:auto;display:block}
+.band .brand-right .brand-cove{width:95px;height:29px;display:block}
 .band .eyebrow{font-weight:500;font-size:13px;letter-spacing:.42em;color:rgba(246,239,224,.82)}
 .band .logo{display:flex;flex-direction:column;align-items:center;gap:5px;
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-decoration:none;color:inherit}

@@ -41,19 +41,26 @@ export default function RootLayout({ children }) {
         <div className="cove-bg" />
 
         <header className="band">
-          <div className="eyebrow">从 海 面 下 打 捞 故 事</div>
-          <Link className="logo" href="/">
-            <span className="main"><span className="cn">海角</span>COVE</span>
-            <span className="sub">COVE.GE</span>
+          <Link className="band-avatar" href="/login" aria-label="靠岸 / 登录">
+            <span className="avatar-dot" />
           </Link>
-          <div className="corner"><span className="num">角</span></div>
+          <nav className="band-nav">
+            {NAV.filter((n) => n.href !== '/login').map((n) => (
+              <Link key={n.href} href={n.href}>{n.label}</Link>
+            ))}
+          </nav>
+          <Link className="brand-right" href="/" aria-label="海角 Cove 首页">
+            <img src="/cove-icon-white.png" alt="" className="brand-mark" />
+            <svg className="brand-cove" viewBox="0 0 300 90" aria-hidden="true">
+              <g fill="none" stroke="#F6EFE0" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M58 26 Q30 20 26 48 Q24 74 54 70" />
+                <ellipse cx="108" cy="48" rx="24" ry="26" />
+                <path d="M156 24 L172 72 L188 24" />
+                <path d="M242 26 Q214 22 212 48 Q210 72 240 70 M214 48 L236 48" />
+              </g>
+            </svg>
+          </Link>
         </header>
-
-        <nav className="cove-nav">
-          {NAV.map((n) => (
-            <Link key={n.href} href={n.href}>{n.label}</Link>
-          ))}
-        </nav>
 
         {children}
       </body>
