@@ -3,12 +3,12 @@ import Link from 'next/link';
 
 export const metadata = {
   title: '海角 Cove',
-  description: '从海面下打捞每一首歌的故事。',
+  description: '音乐人的避风港，也是一座灵感的灯塔。',
 };
 
 // 导航映射（同构摇篮：每日一展｜艺术阅览室｜作品集｜艺术家｜杂志社｜驻地｜合作伙伴）
 // 摇篮                → 海角
-// 每日一展            → 每日音乐节 /festival （制作人邀请函，召集乐手/歌手/词曲作者）
+// 每日一展            → 每日演出   /festival （制作人邀请函，召集乐手/歌手/词曲作者）
 // 艺术阅览室          → 海角唱片行 /records
 // 当代作品集          → 原创码头   /dock
 // 艺术家              → 音乐人     /musicians
@@ -16,7 +16,7 @@ export const metadata = {
 // 驻地                → 灯塔       /lighthouse（随内容积累逐层点亮）
 // 合作伙伴            → 邻港       /harbors
 const NAV = [
-  { href: '/festival', label: '每日音乐节' },
+  { href: '/festival', label: '每日演出' },
   { href: '/records', label: '海角唱片行' },
   { href: '/dock', label: '原创码头' },
   { href: '/musicians', label: '音乐人' },
