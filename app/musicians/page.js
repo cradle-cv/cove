@@ -15,7 +15,7 @@ export default async function MusiciansPage() {
       <div className="sheet-head">
         <div className="no">Musicians</div>
         <div className="th">音乐人</div>
-        <div className="sub">被海角收录过的名字。他们不是入驻的，是被打捞上来的。</div>
+        <div className="sub">在海角停靠过的人。有人写歌，有人唱歌，有人只是路过听了很久。</div>
         <div className="hairline" />
       </div>
       {list && list.length > 0 ? (
