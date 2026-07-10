@@ -609,3 +609,11 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
   background:repeating-linear-gradient(45deg,#7C3B2C 0 8px,transparent 8px 16px,#173A47 16px 24px,transparent 24px 32px) border-box;
   -webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask-composite:exclude}
+
+/* 信封下的一行：往期的信 */
+.past-letters{text-align:center;margin-top:22px;font-size:12.5px;letter-spacing:.08em;
+  color:var(--ink-soft);font-weight:300;opacity:.78}
+.past-letters a{color:var(--band);text-decoration:none;
+  border-bottom:1px solid var(--hair);padding-bottom:2px;margin-left:2px;
+  transition:border-color .25s}
+.past-letters a:hover{border-bottom-color:var(--seaglass)}
