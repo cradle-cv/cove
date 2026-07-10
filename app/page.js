@@ -48,7 +48,7 @@ export default async function HomePage() {
             <div className="postmark" aria-hidden="true">
               <span className="pm-top">SEACOVE</span>
               <span className="pm-date">{dd}·{mm}</span>
-              <span className="pm-bot">海角唱片行</span>
+              <span className="pm-bot">打捞碎月</span>
             </div>
 
             <div className="letter-to">
@@ -74,7 +74,7 @@ export default async function HomePage() {
           <span className="hl-desc">一张邀请函，等你回应</span>
         </Link>
         <Link href="/records">
-          <span className="hl-cn">海角唱片行</span>
+          <span className="hl-cn">打捞碎月</span>
           <span className="hl-desc">收录每一期的歌与故事</span>
         </Link>
         <Link href="/dock">
