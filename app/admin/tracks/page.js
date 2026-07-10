@@ -7,6 +7,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
+import AudioUploader from '@/components/AudioUploader';
 
 // 【】→ segments
 export function parseBeatLine(line) {
@@ -32,7 +33,7 @@ export function beatToLine(b) {
 }
 
 const EMPTY = {
-  title: '', title_en: '', place: '', seal: '', lead_instrument: '', duration: 200,
+  title: '', title_en: '', place: '', seal: '', lead_instrument: '', duration: 200, src_text: '', lyrics_text: '', waveform: null,
   musician_id: '', art: '', sea: '', cover_url: '', status: 'draft',
 };
 
@@ -55,7 +56,15 @@ export default function AdminTracksPage() {
   async function openEdit(t) {
     setMsg('');
     if (!t) { setEditing({ ...EMPTY }); setBeatsText(''); return; }
-    setEditing({ ...t });
+    setEditing({
+      ...t,
+      // src 是 jsonb 数组 → 文本框用多行字符串
+      src_text: Array.isArray(t.src) ? t.src.join('\n') : (typeof t.src === 'string' ? t.src : ''),
+      lyrics_text: Array.isArray(t.lyrics)
+        ? t.lyrics.map((x) => (typeof x === 'string' ? x : x.l)).join('\n')
+        : '',
+      waveform: Array.isArray(t.waveform) ? t.waveform : null,
+    });
     const { data: beats } = await supabase
       .from('cove_beats').select('*').eq('track_id', t.id).order('ord');
     setBeatsText((beats || []).map(beatToLine).join('\n'));
@@ -69,6 +78,14 @@ export default function AdminTracksPage() {
     const row = {
       title: editing.title, title_en: editing.title_en, place: editing.place,
       lead_instrument: editing.lead_instrument || null,
+      src: (editing.src_text || '')
+        .split('\n').map((x) => x.trim()).filter(Boolean).length
+        ? (editing.src_text || '').split('\n').map((x) => x.trim()).filter(Boolean)
+        : null,
+      lyrics: (editing.lyrics_text || '').split('\n').map((x) => x.trim()).filter(Boolean).length
+        ? (editing.lyrics_text || '').split('\n').map((x) => x.trim()).filter(Boolean)
+        : null,
+      waveform: Array.isArray(editing.waveform) && editing.waveform.length ? editing.waveform : null,
       seal: editing.seal, duration: Number(editing.duration) || null,
       musician_id: editing.musician_id || null,
       art: editing.art || null, sea: editing.sea || null,
@@ -115,6 +132,34 @@ export default function AdminTracksPage() {
         <input value={editing.seal || ''} maxLength={1} onChange={(e) => setEditing({ ...editing, seal: e.target.value })} />
         <label>时长（秒）</label>
         <input type="number" value={editing.duration || ''} onChange={(e) => setEditing({ ...editing, duration: e.target.value })} />
+        <label>音频</label>
+        <AudioUploader
+          value={(editing.src_text || '').split('\n')[0] || ''}
+          waveform={editing.waveform}
+          onDone={({ url, waveform, duration }) =>
+            setEditing((p) => ({
+              ...p,
+              src_text: url,
+              waveform: waveform || p.waveform,
+              duration: duration || p.duration,
+            }))
+          }
+        />
+        <label>或手填音频链接（一行一个）</label>
+        <textarea
+          rows={2}
+          value={editing.src_text || ''}
+          onChange={(e) => setEditing({ ...editing, src_text: e.target.value })}
+          placeholder="https://pub-xxxx.r2.dev/covemusic/song.mp3"
+        />
+
+        <label>歌词（一行一句；侧栏低调呈现，不与涨潮字幕争重心）</label>
+        <textarea
+          rows={6}
+          value={editing.lyrics_text || ''}
+          onChange={(e) => setEditing({ ...editing, lyrics_text: e.target.value })}
+          placeholder={'你说海是蓝的\n我说海是咸的\n我们都没说错'}
+        />
         <label>封面渐变 art（或填下方封面图 URL）</label>
         <input value={editing.art || ''} onChange={(e) => setEditing({ ...editing, art: e.target.value })} placeholder="linear-gradient(180deg,…)" />
         <label>海面渐变 sea</label>

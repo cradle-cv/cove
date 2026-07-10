@@ -1,12 +1,13 @@
 'use client';
 
-// 海角唱片行 · 单期沉浸页（客户端）
+// 打捞碎月 · 单期沉浸页（客户端）
 // 两种视图：沉浸聆听（一首一屏，整屏吸附滚动）/ 本期总览（一屏三首）
 // 播放内核：useSeacovePlayer（Howler）；字幕：Narration（结构化，安全）
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useSeacovePlayer } from '@/lib/useSeacovePlayer';
 import Narration from '@/components/Narration';
+import Lyrics from '@/components/Lyrics';
 import Echoes from '@/components/Echoes';
 
 const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV'];
@@ -79,6 +80,10 @@ export default function RecordShopClient({ issue }) {
                     </div>
                     <div className="vline" />
                     <div className="meta">{tr.place}</div>
+                    <Lyrics
+                      lines={tr.lyrics}
+                      progress={i === player.active ? player.progress : 0}
+                    />
                   </div>
 
                   <div className="col-center">
