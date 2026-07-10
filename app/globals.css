@@ -411,3 +411,91 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
   .envelope .postmark{width:74px;height:74px;top:10px;right:8px}
   .envelope .wax-seal{width:44px;height:44px;font-size:20px;bottom:20px;right:20px}
 }
+
+/* ============ 打捞碎月 · 三维视图 ============ */
+.view-tabs{display:flex;justify-content:center;gap:26px;margin:6px 0 30px}
+.view-tabs a{font-size:13.5px;letter-spacing:.16em;color:var(--ink-soft);text-decoration:none;
+  padding-bottom:4px;border-bottom:1.5px solid transparent;transition:color .2s,border-color .2s}
+.view-tabs a:hover{color:var(--ink)}
+.view-tabs a.on{color:var(--ink);border-bottom-color:var(--seaglass)}
+
+.grouped{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:34px}
+.group .group-name{font-family:var(--font-hand);font-weight:400;font-size:26px;letter-spacing:.1em;
+  color:var(--ink);display:flex;align-items:baseline;gap:12px}
+.group .group-sub{font-family:var(--font-serif);font-size:12px;font-weight:300;color:var(--ink-soft);letter-spacing:.08em}
+.group-list{list-style:none;margin-top:10px}
+.group-list li{border-top:1px solid var(--hair)}
+.group-list li:last-child{border-bottom:1px solid var(--hair)}
+.group-list a,.group-list .t-plain{display:flex;align-items:baseline;gap:12px;padding:13px 4px;text-decoration:none}
+.group-list .t-title{font-size:16px;letter-spacing:.06em;color:var(--ink)}
+.group-list .t-en{font-family:var(--font-display);font-style:italic;font-size:13px;color:var(--ink-soft)}
+.group-list .t-meta{margin-left:auto;font-size:12px;color:var(--ink-soft);font-weight:300;letter-spacing:.04em}
+.group-list a:hover .t-title{color:var(--seaglass)}
+
+/* ============ 每日演出 · 三类邀请函 ============ */
+.invite-block{max-width:680px;margin:0 auto 38px}
+.invite-head{display:flex;align-items:baseline;gap:14px;margin-bottom:12px}
+.invite-type{font-family:var(--font-hand);font-weight:400;font-size:24px;letter-spacing:.12em;color:var(--ink)}
+.invite-desc{font-size:12.5px;color:var(--ink-soft);font-weight:300;letter-spacing:.04em}
+.invite-empty{font-size:13px;color:var(--ink-soft);font-weight:300;padding:10px 4px 0;opacity:.7}
+
+/* ============ 海角电台 · 调频盘 ============ */
+.tuner{max-width:640px;margin:0 auto}
+.tuner-band{position:relative;padding:26px 8px 8px}
+.tuner-scale{position:relative;height:58px;border-bottom:1.5px solid var(--band);margin:0 6px}
+.tuner-scale .tick{position:absolute;bottom:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center}
+.tuner-scale .tick i{display:block;width:1px;height:10px;background:var(--ink-soft);opacity:.6}
+.tuner-scale .tick em{font-family:var(--font-utility);font-style:normal;font-size:9px;letter-spacing:.06em;
+  color:var(--ink-soft);margin-bottom:3px;opacity:.75}
+.tuner-scale .station{position:absolute;bottom:-5px;transform:translateX(-50%);width:10px;height:10px;
+  border-radius:50%;border:none;cursor:pointer;background:var(--seal);opacity:.55;transition:all .25s;padding:0}
+.tuner-scale .station.lit{opacity:1;box-shadow:0 0 0 5px rgba(166,80,58,.18), 0 0 14px rgba(166,80,58,.5)}
+.tuner-scale .needle{position:absolute;bottom:-2px;transform:translateX(-50%);width:2px;height:46px;
+  background:var(--band);pointer-events:none;transition:left .12s ease-out}
+.tuner-scale .needle::after{content:"";position:absolute;top:-5px;left:50%;transform:translateX(-50%);
+  width:8px;height:8px;border-radius:50%;background:var(--band)}
+.tuner-slider{width:calc(100% - 12px);margin:14px 6px 0;appearance:none;height:4px;border-radius:2px;
+  background:linear-gradient(90deg,rgba(23,58,71,.25),rgba(23,58,71,.25));outline:none;cursor:pointer}
+.tuner-slider::-webkit-slider-thumb{appearance:none;width:22px;height:22px;border-radius:50%;
+  background:var(--band);border:3px solid var(--paper);box-shadow:0 2px 8px rgba(23,58,71,.4);cursor:grab}
+.tuner-slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--band);
+  border:3px solid var(--paper);box-shadow:0 2px 8px rgba(23,58,71,.4);cursor:grab}
+.tuner-readout{display:flex;align-items:baseline;gap:10px;justify-content:center;margin-top:18px}
+.tuner-readout .freq{font-family:var(--font-display);font-weight:600;font-size:34px;letter-spacing:.04em;color:var(--ink)}
+.tuner-readout .unit{font-family:var(--font-utility);font-size:11px;letter-spacing:.3em;color:var(--ink-soft)}
+.tuner-readout .signal{font-size:12px;font-weight:300;color:var(--ink-soft);letter-spacing:.08em;transition:color .3s}
+.tuner-readout .signal.on{color:var(--seaglass)}
+
+.program{display:block;max-width:520px;margin:26px auto 0;padding:26px 30px;text-align:center;
+  border:1px solid var(--hair);border-radius:6px;text-decoration:none;background:rgba(255,255,255,.35);
+  transition:border-color .3s, box-shadow .3s}
+.program:hover{border-color:var(--seaglass);box-shadow:0 10px 30px -18px rgba(23,58,71,.4)}
+.program .p-ep{font-family:var(--font-display);font-style:italic;font-size:12px;letter-spacing:.24em;color:var(--seal)}
+.program .p-title{display:block;font-family:var(--font-hand);font-weight:400;font-size:30px;
+  letter-spacing:.08em;color:var(--ink);margin:8px 0 2px}
+.program .p-guest{font-size:13px;color:var(--ink-soft);letter-spacing:.1em}
+.program .p-sum{font-size:13px;line-height:1.9;color:var(--ink-soft);font-weight:300;margin-top:12px}
+.program .p-enter{display:inline-block;margin-top:16px;font-size:12.5px;letter-spacing:.18em;color:var(--band);
+  border-bottom:1px solid var(--band);padding-bottom:2px}
+.program.static{border-style:dashed;background:transparent}
+.program .p-hint{font-size:13px;color:var(--ink-soft);font-weight:300;letter-spacing:.06em}
+.program .noise{display:block;height:34px;margin:0 auto 8px;max-width:220px;opacity:.35;
+  background:repeating-linear-gradient(90deg,var(--ink-soft) 0 1px,transparent 1px 3px);
+  mask-image:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent)}
+
+/* ============ 灯塔 · 七层 ============ */
+.tower{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.floor{position:relative;border:1px solid var(--hair);border-radius:12px;padding:20px 24px;
+  background:rgba(255,255,255,.28);opacity:.45;transition:opacity .4s}
+.floor.lit{opacity:1;background:rgba(255,255,255,.5);border-color:rgba(93,154,143,.4)}
+.floor.lit::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:2px;
+  background:linear-gradient(180deg,var(--gold),var(--seaglass))}
+.floor-no{font-family:var(--font-utility);font-size:9.5px;letter-spacing:.3em;color:var(--ink-soft);opacity:.8}
+.floor-name{font-family:var(--font-hand);font-weight:400;font-size:24px;letter-spacing:.12em;color:var(--ink);margin-top:5px}
+.floor-fn{font-size:13.5px;line-height:1.9;color:var(--ink);font-weight:300;margin-top:8px}
+.floor-air{font-size:12px;color:var(--ink-soft);font-weight:300;letter-spacing:.05em;margin-top:6px;font-style:italic}
+.floor-locked{font-size:12.5px;color:var(--ink-soft);font-weight:300;margin-top:8px;letter-spacing:.06em}
+.floor-extra{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:12.5px}
+.floor-extra a{color:var(--band);text-decoration:none;letter-spacing:.1em;border-bottom:1px solid var(--hair);
+  padding-bottom:2px;transition:border-color .2s}
+.floor-extra a:hover{border-bottom-color:var(--seaglass)}
