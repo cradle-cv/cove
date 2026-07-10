@@ -1,16 +1,21 @@
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
 export const revalidate = 300;
-export const metadata = { title: '灯塔 · Seacove' };
+export const metadata = { title: '灯塔 · Cove' };
 
-// 同构摇篮驻地（七个沉浸区 + 等级门），海角的门换成内容本身：
-// unlock_after = 需要已发布的唱片行期数。网站每出一期，灯塔亮一层。
+// 七层，自下而上，随打捞碎月的期数逐层点亮。
+// 每一层都有自己的用处：
+// 1 船坞(来历) 2 守塔人的桌子(手记) 3 信件室(漂流瓶归档)
+// 4 海图室(全站索引) 5 机械室(幕后) 6 瞭望台(预告) 7 灯室(点灯仪式)
 export default async function LighthousePage() {
-  const [{ data: zones }, { count }] = await Promise.all([
+  const [{ data: zones }, { count: published }, { count: echoes }] = await Promise.all([
     supabase.from('cove_lighthouse_zones').select('*').order('floor', { ascending: false }),
     supabase.from('cove_curations').select('id', { count: 'exact', head: true }).eq('status', 'published'),
+    supabase.from('cove_echoes').select('id', { count: 'exact', head: true }),
   ]);
-  const published = count || 0;
+  const pub = published || 0;
+  const litCount = (zones || []).filter((z) => pub >= z.unlock_after).length;
 
   return (
     <main className="sheet">
@@ -18,33 +23,46 @@ export default async function LighthousePage() {
         <div className="no">Lighthouse</div>
         <div className="th">灯塔</div>
         <div className="sub">
-          七层，自下而上。唱片行每出一期，灯塔就亮一层。<br />
-          现在亮到第 {zones ? zones.filter((z) => published >= z.unlock_after).length : 0} 层。
+          七层，自下而上。打捞碎月每出一期，灯塔就亮一层。<br />
+          现在亮到第 {litCount} 层。
         </div>
         <div className="hairline" />
       </div>
 
-      <div style={{ maxWidth: 520, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <div className="tower">
         {(zones || []).map((z) => {
-          const lit = published >= z.unlock_after;
+          const lit = pub >= z.unlock_after;
           return (
-            <div key={z.id} style={{
-              position: 'relative', borderRadius: 14, overflow: 'hidden',
-              border: '1px solid var(--hair)',
-              opacity: lit ? 1 : 0.42, filter: lit ? 'none' : 'grayscale(.7)',
-              transition: 'all .4s',
-            }}>
-              <div style={{ position: 'absolute', inset: 0, background: z.scene, opacity: 0.9 }} />
-              <div style={{ position: 'relative', padding: '22px 24px', color: '#F6EFE0' }}>
-                <div style={{ fontFamily: 'var(--font-utility)', fontSize: 10, letterSpacing: '.3em', opacity: 0.75 }}>
-                  FLOOR {z.floor}
-                </div>
-                <div style={{ fontWeight: 600, fontSize: 18, letterSpacing: '.14em', marginTop: 6 }}>{z.name}</div>
-                <div style={{ fontSize: 13, fontWeight: 300, marginTop: 8, opacity: 0.85, lineHeight: 1.8 }}>
-                  {lit ? z.ambience : `第 ${z.unlock_after} 期之后点亮`}
-                </div>
-              </div>
-            </div>
+            <section key={z.id} className={`floor${lit ? ' lit' : ''}`}>
+              <div className="floor-no">FLOOR {z.floor}</div>
+              <h3 className="floor-name">{z.name}</h3>
+
+              {lit ? (
+                <>
+                  <p className="floor-fn">{z.scene}</p>
+                  <p className="floor-air">{z.ambience}</p>
+
+                  {/* 各层的入口 */}
+                  {z.floor === 3 ? (
+                    <p className="floor-extra">已归档 {echoes || 0} 只漂流瓶</p>
+                  ) : null}
+                  {z.floor === 4 ? (
+                    <p className="floor-extra">
+                      <Link href="/records?view=instruments">按主奏乐器查看 →</Link>
+                      <Link href="/records?view=musicians">按音乐人查看 →</Link>
+                    </p>
+                  ) : null}
+                  {z.floor === 6 ? (
+                    <p className="floor-extra">
+                      <Link href="/festival">正在酝酿的演出 →</Link>
+                      <Link href="/harbors">邻港的动静 →</Link>
+                    </p>
+                  ) : null}
+                </>
+              ) : (
+                <p className="floor-locked">第 {z.unlock_after} 期之后点亮</p>
+              )}
+            </section>
           );
         })}
       </div>
