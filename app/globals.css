@@ -537,3 +537,30 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
   border-radius:4px;padding:6px 8px}
 .up-wave canvas{width:100%;height:100%;display:block}
 .up-url{font-size:11px;color:var(--ink-soft);margin-top:8px;word-break:break-all;opacity:.7;font-weight:300}
+
+/* ============ 沉浸页改版 · 左栏歌词 / 波形海面 ============ */
+/* 左栏：逐行歌词常驻，替代原来的竖排标题与印章 */
+.col-left{display:flex;flex-direction:column;justify-content:center;gap:16px;
+  padding-right:clamp(14px,2vw,28px)}
+.col-left .lyrics{border-right:1px solid var(--hair);padding-right:clamp(14px,1.8vw,24px)}
+.col-left .lyrics-cap{font-size:10.5px;letter-spacing:.26em;color:var(--ink-soft);
+  opacity:.7;margin-bottom:14px}
+.col-left .lyrics-body{min-height:150px;display:flex;flex-direction:column;justify-content:center}
+.col-left .lyrics-body p{font-size:12.5px;line-height:2.25;color:var(--ink-soft);opacity:.34;
+  font-weight:300;margin:0;transition:opacity .65s,color .65s}
+.col-left .lyrics-body p.on{opacity:.85;color:var(--ink)}
+.col-left .place-mark{font-size:11px;letter-spacing:.2em;color:var(--ink-soft);opacity:.6;
+  font-weight:300;padding-right:clamp(14px,1.8vw,24px)}
+
+/* 波形海面：取代 dock 里的进度条 */
+.dock .tidewave{padding:2px 0 8px}
+.waveform{width:100%;height:56px;display:block}
+
+/* 字幕未展开时的提示 */
+.beat-hint{font-size:12.5px;color:var(--ink-soft);font-weight:300;letter-spacing:.06em;
+  opacity:.72;line-height:1.9}
+
+@media (max-width:900px){
+  .col-left .lyrics-body p{font-size:12px}
+  .waveform{height:46px}
+}

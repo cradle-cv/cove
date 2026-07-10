@@ -1,45 +1,38 @@
 'use client';
-// 歌词 · 侧栏的低语
-// 涨潮字幕是海角的叙述，是这一页唯一被强调的文本。
-// 歌词是歌自己的文本，压在一侧，像唱片内页折起来的那张纸——
-// 你想读就掀开它，不想读，它就是背景的一部分。
-import { useState } from 'react';
+// 歌词 · 左栏的逐行
+// 只显示当前行前后几句，其余不出现，所以它永远是一小片，不会变成一堵墙。
+// 当前行加深，不加粗，不高亮。歌自己在说话，海角在旁边不打断。
+const WINDOW_BEFORE = 2;
+const WINDOW_AFTER = 3;
 
 export default function Lyrics({ lines, progress = 0 }) {
-  const [open, setOpen] = useState(false);
   if (!Array.isArray(lines) || lines.length === 0) return null;
-
   const rows = lines.map((x) => (typeof x === 'string' ? { l: x } : x));
 
-  // 当前行：有时间点就按时间点，否则按播放进度均分
-  const cur = (() => {
-    if (rows[0]?.t != null) {
-      let idx = -1;
-      rows.forEach((r, i) => { if (progress >= r.t) idx = i; });
-      return idx;
-    }
-    return progress > 0 ? Math.min(rows.length - 1, Math.floor(progress * rows.length)) : -1;
-  })();
+  // 当前行
+  let cur = -1;
+  if (rows[0]?.t != null) {
+    rows.forEach((r, i) => { if (progress >= r.t) cur = i; });
+  } else if (progress > 0) {
+    cur = Math.min(rows.length - 1, Math.floor(progress * rows.length));
+  }
+
+  // 未播放时显示开头几句
+  const anchor = cur < 0 ? 0 : cur;
+  const from = Math.max(0, anchor - (cur < 0 ? 0 : WINDOW_BEFORE));
+  const to = Math.min(rows.length - 1, anchor + WINDOW_AFTER);
 
   return (
-    <div className={'lyrics' + (open ? ' open' : '')}>
-      <div className="lyrics-panel" aria-hidden={!open}>
-        <div className="lyrics-cap">歌 词</div>
-        <div className="lyrics-body">
-          {rows.map((r, i) => (
+    <div className="lyrics">
+      <div className="lyrics-cap">歌 词</div>
+      <div className="lyrics-body">
+        {rows.slice(from, to + 1).map((r, k) => {
+          const i = from + k;
+          return (
             <p key={i} className={i === cur ? 'on' : ''}>{r.l}</p>
-          ))}
-        </div>
+          );
+        })}
       </div>
-
-      <button
-        type="button"
-        className="lyrics-tab"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-      >
-        {open ? '收 起' : '歌 词'}
-      </button>
     </div>
   );
 }

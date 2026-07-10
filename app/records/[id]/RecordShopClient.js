@@ -9,6 +9,8 @@ import { useSeacovePlayer } from '@/lib/useSeacovePlayer';
 import Narration from '@/components/Narration';
 import Lyrics from '@/components/Lyrics';
 import Echoes from '@/components/Echoes';
+import Waveform from '@/components/Waveform';
+import { activeBeatIndex } from '@/lib/beats';
 
 const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV'];
 const roman = (n) => ROMAN[n - 1] || String(n);
@@ -22,8 +24,28 @@ export default function RecordShopClient({ issue }) {
   const tracks = issue.tracks;
   const player = useSeacovePlayer(tracks, { volume: 0.55 });
   const [mode, setMode] = useState('immersive'); // immersive | overview
+  // 涨潮字幕当前段：潮水漫过时自动推进；点浮标则锁到那一段，直到潮水再次越过它
+  const [picked, setPicked] = useState({ track: -1, beat: -1, at: -1 });
   const reelRef = useRef(null);
   const screenRefs = useRef([]);
+
+  // 当前段：默认随潮水推进；点了浮标就锁在那一段，
+  // 直到潮水漫过它之后的下一个浮标，主动权重新交还给歌。
+  const beatIndexFor = useCallback((i) => {
+    const beats = tracks[i]?.beats || [];
+    if (!beats.length) return -1;
+    const prog = i === player.active ? player.progress : 0;
+    const auto = prog > 0.001 ? activeBeatIndex(beats, prog) : -1;
+    if (picked.track === i && picked.beat >= 0) {
+      const passed = auto > picked.beat;
+      if (!passed) return picked.beat;
+    }
+    return auto;
+  }, [tracks, player.active, player.progress, picked]);
+
+  const pickBeat = useCallback((i, b) => {
+    setPicked({ track: i, beat: b, at: Date.now() });
+  }, []);
 
   // 滚动切屏：命中新屏则 select（自动停旧曲）
   useEffect(() => {
@@ -46,12 +68,6 @@ export default function RecordShopClient({ issue }) {
   }, []);
 
   // 潮线拖动
-  const tideRef = useRef(null);
-  const onTide = useCallback((clientX) => {
-    const r = tideRef.current.getBoundingClientRect();
-    player.seek((clientX - r.left) / r.width);
-  }, [player]);
-
   const t = tracks[player.active];
 
   return (
@@ -74,16 +90,11 @@ export default function RecordShopClient({ issue }) {
               >
                 <div className="composition">
                   <div className="col-left">
-                    <div className="stack">
-                      <div className="vtitle">{tr.cn}</div>
-                      <div className="seal-mark">{tr.seal}</div>
-                    </div>
-                    <div className="vline" />
-                    <div className="meta">{tr.place}</div>
                     <Lyrics
                       lines={tr.lyrics}
                       progress={i === player.active ? player.progress : 0}
                     />
+                    <div className="place-mark">{tr.place}</div>
                   </div>
 
                   <div className="col-center">
@@ -112,8 +123,9 @@ export default function RecordShopClient({ issue }) {
                     <div className="ghost">{i + 1}</div>
                     <Narration
                       beats={tr.beats}
-                      progress={i === player.active ? player.progress : 0}
+                      index={beatIndexFor(i)}
                       lead={`第 ${CNNUM[i]} 首 · ${issue.theme_zh}`}
+                      hint="海面上浮着几个点。等潮水漫过去，或者伸手点开它们。"
                     />
                   </div>
                 </div>
@@ -171,15 +183,16 @@ export default function RecordShopClient({ issue }) {
 
       {/* 播放器坞（两种视图共用） */}
       <div className="dock">
-        <div
-          className="tidebar"
-          ref={tideRef}
-          onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); onTide(e.clientX); }}
-          onPointerMove={(e) => { if (e.buttons === 1) onTide(e.clientX); }}
-        >
-          <div className="trackline" />
-          <div className="fill" style={{ width: `${player.progress * 100}%` }} />
-          <div className="knob" style={{ left: `${player.progress * 100}%` }} />
+        <div className="tidewave">
+          <Waveform
+            peaks={t?.waveform}
+            duration={player.duration}
+            progress={player.progress}
+            beats={t?.beats || []}
+            activeBeat={beatIndexFor(player.active)}
+            onSeek={(r) => player.seek(r)}
+            onPickBeat={(b) => pickBeat(player.active, b)}
+          />
         </div>
         <div className="dockrow">
           <button className="pbtn" onClick={player.toggle} aria-label="播放">
