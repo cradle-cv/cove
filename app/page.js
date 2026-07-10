@@ -7,13 +7,28 @@ const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XI
 const roman = (n) => ROMAN[n - 1] || String(n);
 
 export default async function HomePage() {
-  const { data: latest } = await supabase
+  // 首页显示哪一期：后台勾了「显示在首页」就用那一期；
+  // 没有勾任何一期时，退回期号最大的已发布期。
+  const cols = 'id, issue_number, theme_zh, theme_en, intro, published_at, envelope_color';
+
+  const { data: featured } = await supabase
     .from('cove_curations')
-    .select('id, issue_number, theme_zh, theme_en, intro, published_at')
+    .select(cols)
     .eq('status', 'published')
-    .order('issue_number', { ascending: false })
-    .limit(1)
+    .eq('is_featured', true)
     .maybeSingle();
+
+  let latest = featured;
+  if (!latest) {
+    const { data: fallback } = await supabase
+      .from('cove_curations')
+      .select(cols)
+      .eq('status', 'published')
+      .order('issue_number', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    latest = fallback;
+  }
 
   const stampDate = latest?.published_at ? new Date(latest.published_at) : new Date();
   const dd = String(stampDate.getDate()).padStart(2, '0');
@@ -37,7 +52,7 @@ export default async function HomePage() {
         <div className="mail-label">— 本期来信 · A LETTER FROM THE COVE —</div>
 
         {latest ? (
-          <article className="envelope">
+          <article className={`envelope env-${latest.envelope_color || 'kraft'}`}>
             <div className="stamp">
               <div className="stamp-inner">
                 <img src="/cove-icon-white.png" alt="" />
