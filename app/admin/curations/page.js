@@ -6,7 +6,12 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 
-const EMPTY = { issue_number: '', theme_zh: '', theme_en: '', intro: '', is_special: false, status: 'draft' };
+const EMPTY = { issue_number: '', theme_zh: '', theme_en: '', intro: '', is_special: false, status: 'draft', is_featured: false, envelope_color: 'kraft' };
+const ENVELOPE_COLORS = [
+  ['kraft', '牛皮黄（默认）'],
+  ['blue', '海蓝'],
+  ['red', '赭红'],
+];
 
 export default function AdminCurationsPage() {
   const [issues, setIssues] = useState([]);
@@ -45,11 +50,19 @@ export default function AdminCurationsPage() {
     setMsg('');
     if (!editing.issue_number || !editing.theme_zh) { setMsg('期号和中文主题必填'); return; }
     if (picked.length === 0) { setMsg('至少选一首歌'); return; }
+    // 置顶唯一：先把别期的置顶取消，再写入本期
+    if (editing.is_featured) {
+      const q = supabase.from('cove_curations').update({ is_featured: false }).eq('is_featured', true);
+      if (editing.id) await q.neq('id', editing.id); else await q;
+    }
+
     const row = {
       issue_number: Number(editing.issue_number),
       theme_zh: editing.theme_zh, theme_en: editing.theme_en || null,
       intro: editing.intro || null, is_special: !!editing.is_special,
       track_ids: picked, status: editing.status,
+      is_featured: !!editing.is_featured,
+      envelope_color: editing.envelope_color || 'kraft',
       published_at: editing.status === 'published' ? (editing.published_at || new Date().toISOString()) : null,
     };
     const q = editing.id
@@ -98,6 +111,21 @@ export default function AdminCurationsPage() {
           ))}
         </div>
 
+        <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+          <input
+            type="checkbox"
+            checked={!!editing.is_featured}
+            onChange={(e) => setEditing({ ...editing, is_featured: e.target.checked })}
+            style={{ width: 'auto', margin: 0 }}
+          />
+          显示在首页（勾选后，首页信封换成这一期；同时只能有一期）
+        </label>
+
+        <label>信封底色</label>
+        <select value={editing.envelope_color || 'kraft'} onChange={(e) => setEditing({ ...editing, envelope_color: e.target.value })}>
+          {ENVELOPE_COLORS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+        </select>
+
         <label>状态（⚠ 本表用 draft / published；发布的期会点亮灯塔）</label>
         <select value={editing.status} onChange={(e) => setEditing({ ...editing, status: e.target.value })}>
           <option value="draft">draft</option><option value="published">published</option>
@@ -117,13 +145,17 @@ export default function AdminCurationsPage() {
         <button className="btn small" onClick={() => openEdit(null)}>建新一期</button>
       </div>
       <table className="admin-table">
-        <thead><tr><th>期号</th><th>主题</th><th>曲目数</th><th>状态</th><th></th></tr></thead>
+        <thead><tr><th>期号</th><th>主题</th><th>曲目数</th><th>信封</th><th>首页</th><th>状态</th><th></th></tr></thead>
         <tbody>
           {issues.map((c) => (
             <tr key={c.id}>
               <td>No. {c.issue_number}{c.is_special ? '（特刊）' : ''}</td>
               <td>{c.theme_zh}<em style={{ color: 'var(--ink-soft)', marginLeft: 8 }}>{c.theme_en}</em></td>
               <td>{c.track_ids?.length || 0}</td>
+              <td style={{ fontSize: 12, color: 'var(--ink-soft)' }}>
+                {({ kraft: '牛皮黄', blue: '海蓝', red: '赭红' })[c.envelope_color || 'kraft']}
+              </td>
+              <td>{c.is_featured ? <span className="status-pill pub">首页</span> : null}</td>
               <td><span className={'status-pill' + (c.status === 'published' ? ' pub' : '')}>{c.status}</span></td>
               <td><button className="btn ghost small" onClick={() => openEdit(c)}>编辑</button></td>
             </tr>
