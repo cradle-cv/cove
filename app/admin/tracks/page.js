@@ -32,7 +32,7 @@ export function beatToLine(b) {
 }
 
 const EMPTY = {
-  title: '', title_en: '', place: '', seal: '', duration: 200,
+  title: '', title_en: '', place: '', seal: '', lead_instrument: '', duration: 200,
   musician_id: '', art: '', sea: '', cover_url: '', status: 'draft',
 };
 
@@ -68,6 +68,7 @@ export default function AdminTracksPage() {
 
     const row = {
       title: editing.title, title_en: editing.title_en, place: editing.place,
+      lead_instrument: editing.lead_instrument || null,
       seal: editing.seal, duration: Number(editing.duration) || null,
       musician_id: editing.musician_id || null,
       art: editing.art || null, sea: editing.sea || null,
@@ -108,6 +109,8 @@ export default function AdminTracksPage() {
         </select>
         <label>来处（如 东山岛 · 1986）</label>
         <input value={editing.place || ''} onChange={(e) => setEditing({ ...editing, place: e.target.value })} />
+        <label>主奏乐器</label>
+        <input value={editing.lead_instrument || ''} onChange={(e) => setEditing({ ...editing, lead_instrument: e.target.value })} placeholder="木吉他 / 钢琴 / 大提琴…" />
         <label>印章单字</label>
         <input value={editing.seal || ''} maxLength={1} onChange={(e) => setEditing({ ...editing, seal: e.target.value })} />
         <label>时长（秒）</label>
