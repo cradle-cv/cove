@@ -37,19 +37,19 @@ export default async function HomePage() {
   return (
     <main className="home">
       <section className="home-hero">
-        <div className="hero-eyebrow">音乐人的避风港，也是一座灵感的灯塔</div>
+        <div className="hero-eyebrow">写歌的人，靠岸的地方</div>
         <div className="hero-logo">
           <img className="hero-tri" src="/logo-tri.png" alt="海角 Cove" />
           <img className="hero-word" src="/logo-text.png" alt="" />
         </div>
         <p className="hero-tagline">
-          这里不做推荐，不追热榜。<br />
-          歌可以慢慢写，故事可以慢慢讲，人可以慢慢遇见。
+          一期几首歌，讲清楚它们的来历。<br />
+          写歌的人在这里认识彼此，有时候一起去演出。
         </p>
       </section>
 
       <section className="mailbox">
-        <div className="mail-label">— 本期来信 · A LETTER FROM THE COVE —</div>
+        <div className="mail-label">— 本期来信 —</div>
 
         {latest ? (
           <article className={`envelope env-${latest.envelope_color || 'kraft'}`}>
@@ -79,26 +79,32 @@ export default async function HomePage() {
             <div className="wax-seal" aria-hidden="true">角</div>
           </article>
         ) : (
-          <p className="dredging">第一封信还在海上</p>
+          <p className="dredging">第一封信还没有写完</p>
         )}
+
+        {latest ? (
+          <p className="past-letters">
+            往期的信收在<Link href="/records">打捞碎月</Link>
+          </p>
+        ) : null}
       </section>
 
       <section className="home-links">
         <Link href="/festival">
           <span className="hl-cn">每日演出</span>
-          <span className="hl-desc">一张邀请函，等你回应</span>
+          <span className="hl-desc">有人在找乐手，有人在找场地</span>
         </Link>
         <Link href="/records">
           <span className="hl-cn">打捞碎月</span>
-          <span className="hl-desc">收录每一期的歌与故事</span>
+          <span className="hl-desc">每期几首，连同它们的来历</span>
         </Link>
         <Link href="/dock">
           <span className="hl-cn">原创码头</span>
-          <span className="hl-desc">停靠音乐人的原创与手记</span>
+          <span className="hl-desc">音乐人自己发的歌</span>
         </Link>
         <Link href="/musicians">
           <span className="hl-cn">音乐人</span>
-          <span className="hl-desc">在这里遇见同路的人</span>
+          <span className="hl-desc">停靠过这里的人</span>
         </Link>
       </section>
     </main>
