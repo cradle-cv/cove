@@ -7,7 +7,9 @@ import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useUser } from '@/lib/useUser';
 
-const EMPTY = { title: '', venue: '', show_date: '', brief: '', roles_text: '', deadline: '', status: 'draft' };
+const EMPTY = { title: '', venue: '', show_date: '', brief: '', roles_text: '', deadline: '', status: 'draft', invite_type: 'gig_call', organizer_role: 'producer' };
+const TYPE_OPTS = [['gig_call','演出征人'],['band_recruit','乐团招募'],['venue_offer','场地承接']];
+const ROLE_OPTS = [['singer','歌手'],['instrumentalist','乐手'],['producer','制作人'],['bar','酒吧'],['music_company','音乐公司'],['promoter','演出机构']];
 
 export default function AdminFestivalsPage() {
   const { profile } = useUser();
@@ -29,6 +31,7 @@ export default function AdminFestivalsPage() {
     setEditing({
       ...f,
       show_date: f.show_date || '',
+      invite_type: f.invite_type || 'gig_call', organizer_role: f.organizer_role || 'producer',
       deadline: f.deadline ? f.deadline.slice(0, 16) : '',
       roles_text: (f.roles_needed || []).map((r) => `${r.role} ${r.count}`).join('\n'),
     });
@@ -45,6 +48,7 @@ export default function AdminFestivalsPage() {
       title: editing.title, venue: editing.venue || null,
       show_date: editing.show_date || null, brief: editing.brief || null,
       roles_needed: roles, deadline: editing.deadline ? new Date(editing.deadline).toISOString() : null,
+      invite_type: editing.invite_type || 'gig_call', organizer_role: editing.organizer_role || null,
       status: editing.status,
       ...(editing.id ? {} : { producer_id: profile?.id }),
     };
@@ -102,6 +106,14 @@ export default function AdminFestivalsPage() {
       <input value={editing.title} onChange={(e) => setEditing({ ...editing, title: e.target.value })} />
       <label>场地</label>
       <input value={editing.venue || ''} onChange={(e) => setEditing({ ...editing, venue: e.target.value })} />
+      <label>邀请函类型</label>
+      <select value={editing.invite_type || 'gig_call'} onChange={(e) => setEditing({ ...editing, invite_type: e.target.value })}>
+        {TYPE_OPTS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+      </select>
+      <label>发起方身份</label>
+      <select value={editing.organizer_role || 'producer'} onChange={(e) => setEditing({ ...editing, organizer_role: e.target.value })}>
+        {ROLE_OPTS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+      </select>
       <label>演出日期</label>
       <input type="date" value={editing.show_date || ''} onChange={(e) => setEditing({ ...editing, show_date: e.target.value })} />
       <label>邀请函正文</label>
