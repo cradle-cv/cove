@@ -9,7 +9,7 @@ export const metadata = {
 // 导航映射（同构摇篮：每日一展｜艺术阅览室｜作品集｜艺术家｜杂志社｜驻地｜合作伙伴）
 // 摇篮                → 海角
 // 每日一展            → 每日演出   /festival （制作人邀请函，召集乐手/歌手/词曲作者）
-// 艺术阅览室          → 海角唱片行 /records
+// 艺术阅览室          → 打捞碎月   /records （按期/按主奏乐器/按音乐人 三维浏览）
 // 当代作品集          → 原创码头   /dock
 // 艺术家              → 音乐人     /musicians
 // 杂志社              → 海角电台   /radio    （主持人专访）
@@ -17,7 +17,7 @@ export const metadata = {
 // 合作伙伴            → 邻港       /harbors
 const NAV = [
   { href: '/festival', label: '每日演出' },
-  { href: '/records', label: '海角唱片行' },
+  { href: '/records', label: '打捞碎月' },
   { href: '/dock', label: '原创码头' },
   { href: '/musicians', label: '音乐人' },
   { href: '/radio', label: '海角电台' },
