@@ -1,5 +1,6 @@
 import './globals.css';
 import Link from 'next/link';
+import AvatarMenu from '@/components/AvatarMenu';
 
 export const metadata = {
   title: '海角 Cove',
@@ -15,10 +16,12 @@ export const metadata = {
 // 杂志社              → 海角电台   /radio    （主持人专访）
 // 驻地                → 灯塔       /lighthouse（随内容积累逐层点亮）
 // 合作伙伴            → 邻港       /harbors
+// （海角原生）        → 海玻璃     /glass    （诗 + AI 辅助生成的音乐，各色卡片）
 const NAV = [
   { href: '/festival', label: '每日演出' },
   { href: '/records', label: '打捞碎月' },
   { href: '/dock', label: '原创码头' },
+  { href: '/glass', label: '海玻璃' },
   { href: '/musicians', label: '音乐人' },
   { href: '/radio', label: '海角电台' },
   { href: '/lighthouse', label: '灯塔' },
@@ -41,9 +44,7 @@ export default function RootLayout({ children }) {
         <div className="cove-bg" />
 
         <header className="band">
-          <Link className="band-avatar" href="/login" aria-label="靠岸 / 登录">
-            <span className="avatar-dot" />
-          </Link>
+          <AvatarMenu />
           <nav className="band-nav">
             {NAV.filter((n) => n.href !== '/login').map((n) => (
               <Link key={n.href} href={n.href}>{n.label}</Link>
