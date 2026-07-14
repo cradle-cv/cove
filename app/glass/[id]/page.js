@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import PoemNotes from './PoemNotes';
 import PoemGallery from './PoemGallery';
+import GlassTide from './GlassTide';
 
 export const revalidate = 60;
 
@@ -20,6 +21,8 @@ export default async function GlassDetail({ params }) {
   if (!p) notFound();
 
   const audio = Array.isArray(p.audio_src) ? p.audio_src[0] : null;
+  const images = Array.isArray(p.images) ? p.images.filter(Boolean) : [];
+  const hasImages = images.length > 0;
 
   const { data: notes } = await supabase
     .from('cove_poem_notes').select('id, visitor_name, body, created_at')
@@ -27,7 +30,7 @@ export default async function GlassDetail({ params }) {
 
   return (
     <main className={`glass-detail gd-${p.glass_color}`}>
-      {/* 熠熠生辉的光晕背景，颜色随这枚玻璃 */}
+      {/* 熠熠生辉的光晕背景 */}
       <div className="gd-glow" aria-hidden="true">
         <span className="glow-a" /><span className="glow-b" /><span className="glow-c" />
       </div>
@@ -35,24 +38,32 @@ export default async function GlassDetail({ params }) {
       <div className="gd-inner">
         <div className="gd-eyebrow">Sea Glass</div>
 
-        {/* 诗，安放在一枚半透明的玻璃上 */}
-        <article className="glass-slab">
-          <div className="slab-shine" aria-hidden="true" />
-          <h1 className="gd-title">{p.title}</h1>
-          <div className="gd-poet">{p.poet_name}</div>
-          <div className="gd-body">
-            {p.body.split('\n').map((line, i) =>
-              line.trim() ? <p key={i}>{line}</p> : <p key={i} className="blank">&nbsp;</p>
-            )}
-          </div>
-        </article>
+        {/* 左图右文（无图时诗居中占满） */}
+        <div className={'gd-stage' + (hasImages ? ' has-img' : '')}>
+          {hasImages ? (
+            <div className="gd-left">
+              <PoemGallery images={images} />
+            </div>
+          ) : null}
 
-        <PoemGallery images={p.images || []} />
+          <div className="gd-right">
+            <article className="glass-slab">
+              <div className="slab-shine" aria-hidden="true" />
+              <h1 className="gd-title">{p.title}</h1>
+              <div className="gd-poet">{p.poet_name}</div>
+              <div className="gd-body">
+                {p.body.split('\n').map((line, i) =>
+                  line.trim() ? <p key={i}>{line}</p> : <p key={i} className="blank">&nbsp;</p>
+                )}
+              </div>
+            </article>
+          </div>
+        </div>
 
         {audio ? (
           <div className="poem-audio">
             <div className="pa-cap">从这首诗里长出来的音乐</div>
-            <audio controls preload="none" src={audio} />
+            <GlassTide src={audio} color={p.glass_color} />
             {p.gen_note ? <p className="pa-note">{p.gen_note}</p> : null}
           </div>
         ) : (
