@@ -81,8 +81,12 @@ export default function GlassTide({ src, color = 'green' }) {
       <audio
         ref={audioRef}
         src={src}
-        preload="metadata"
-        onLoadedMetadata={(e) => setDur(e.target.duration || 0)}
+        preload="auto"
+        onLoadedMetadata={(e) => {
+          setDur(e.target.duration || 0);
+          // 尝试自动播放；浏览器可能因未交互而拦截，拦了就等用户点
+          e.target.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+        }}
         onTimeUpdate={(e) => {
           const a = e.target;
           setCur(a.currentTime);
