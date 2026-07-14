@@ -76,7 +76,7 @@ export default function GlassSubmit() {
       <div className="sheet-head">
         <div className="no">Sea Glass</div>
         <div className="th">把一枚放到滩上</div>
-        <div className="sub">一首诗，一种颜色，和你用 AI 从这首诗里做出来的音乐。</div>
+        <div className="sub">一首诗或一段故事，一种颜色，配上你用 AI 做出来的音乐。</div>
         <div className="hairline" />
       </div>
 
@@ -87,7 +87,7 @@ export default function GlassSubmit() {
         <label>标题</label>
         <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
 
-        <label>诗（保留换行）</label>
+        <label>诗或故事（保留换行）</label>
         <textarea rows={10} value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} />
 
         <label>这一枚的颜色</label>
