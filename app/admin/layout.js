@@ -15,6 +15,7 @@ const MENU = [
   { href: '/admin/partners', label: '邻港' },
   { href: '/admin/poems', label: '玻璃海滩审核' },
   { href: '/admin/applications', label: '身份申请审核' },
+  { href: '/admin/users', label: '用户管理' },
 ];
 
 export default function AdminLayout({ children }) {
