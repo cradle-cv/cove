@@ -44,7 +44,7 @@ export default async function GlassPage() {
       )}
 
       <p className="glass-submit-line">
-        写诗的人，可以<Link href="/glass/submit">把一枚放到滩上</Link>
+        有诗和故事的人，可以<Link href="/glass/submit">把你的玻璃放在海滩上</Link>
       </p>
     </main>
   );
