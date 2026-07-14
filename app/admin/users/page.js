@@ -16,12 +16,13 @@ const ROLES = [
 export default function AdminUsersPage() {
   const [list, setList] = useState([]);
   const [me, setMe] = useState(null);
+  const [editing, setEditing] = useState(null);
   const [msg, setMsg] = useState('');
   const [q, setQ] = useState('');
 
   const load = useCallback(async () => {
     const { data } = await supabase.from('users')
-      .select('id, auth_id, email, username, handle, role, roles, created_at')
+      .select('id, auth_id, email, username, handle, bio, role, roles, created_at')
       .order('created_at', { ascending: false });
     setList(data || []);
   }, []);
@@ -30,6 +31,35 @@ export default function AdminUsersPage() {
     supabase.auth.getUser().then(({ data }) => setMe(data?.user?.id || null));
     load();
   }, [load]);
+
+  async function saveProfile() {
+    setMsg('正在保存…');
+    const handle = (editing.handle || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+    const { error } = await supabase.from('users').update({
+      username: editing.username?.trim() || null,
+      handle: handle || null,
+      bio: editing.bio?.trim() || null,
+    }).eq('id', editing.id);
+    if (error) {
+      setMsg(error.message.includes('handle_unique') ? '主页地址被占用' : '保存失败：' + error.message);
+      return;
+    }
+    setEditing(null); setMsg(''); load();
+  }
+
+  async function resetPassword(u) {
+    const pwd = prompt(`给 ${u.username || u.email} 设置新密码（至少 6 位）：`);
+    if (!pwd) return;
+    if (pwd.length < 6) { setMsg('密码至少 6 位'); return; }
+    setMsg('正在重置…');
+    const { data: { session } } = await supabase.auth.getSession();
+    const resp = await fetch('/api/admin/reset-password', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ callerToken: session?.access_token, userId: u.id, newPassword: pwd }),
+    });
+    const data = await resp.json();
+    setMsg(resp.ok ? '密码已重置' : ('重置失败：' + (data.error || '')));
+  }
 
   async function toggleRole(u, role) {
     setMsg('');
@@ -56,6 +86,25 @@ export default function AdminUsersPage() {
       || (u.email || '').toLowerCase().includes(s)
       || (u.handle || '').toLowerCase().includes(s);
   });
+
+  if (editing) {
+    return (
+      <div className="cove-form" style={{ maxWidth: 520, margin: '0 auto' }}>
+        <h3 style={{ fontSize: 15, letterSpacing: '.1em', marginBottom: 16 }}>编辑 · {editing.email}</h3>
+        <label>显示名字</label>
+        <input value={editing.username || ''} onChange={(e) => setEditing({ ...editing, username: e.target.value })} />
+        <label>主页地址（cove.ge/u/…）</label>
+        <input value={editing.handle || ''} onChange={(e) => setEditing({ ...editing, handle: e.target.value })} />
+        <label>简介</label>
+        <textarea rows={4} value={editing.bio || ''} onChange={(e) => setEditing({ ...editing, bio: e.target.value })} />
+        <div className="form-msg">{msg}</div>
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+          <button className="btn" onClick={saveProfile}>保存</button>
+          <button className="btn ghost" onClick={() => { setEditing(null); setMsg(''); }}>取消</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -102,6 +151,8 @@ export default function AdminUsersPage() {
               );
             })}
             <span style={{ flex: 1 }} />
+            <button className="btn ghost small" onClick={() => setEditing({ ...u })}>编辑资料</button>
+            <button className="btn ghost small" onClick={() => resetPassword(u)} disabled={!u.auth_id}>重置密码</button>
             <button className="btn ghost small" onClick={() => toggleAdmin(u)}
               disabled={u.auth_id === me}>
               {u.role === 'admin' ? '撤销管理员' : '设为管理员'}
