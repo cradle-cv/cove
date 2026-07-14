@@ -26,10 +26,11 @@ export default function AvatarMenu() {
   }, []);
 
   useEffect(() => {
+    if (!open) return;
     const close = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener('click', close);
-    return () => document.removeEventListener('click', close);
-  }, []);
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, [open]);
 
   if (!user) {
     return (
