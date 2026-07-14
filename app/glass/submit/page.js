@@ -99,7 +99,7 @@ export default function GlassSubmit() {
           onDone={({ url }) => setForm((f) => ({ ...f, audio: url }))}
         />
 
-        <label>生成手记（这段音乐是怎么从诗里来的，可不填）</label>
+        <label>灵感来源（可选）</label>
         <textarea rows={3} value={form.gen_note} onChange={(e) => setForm({ ...form, gen_note: e.target.value })} />
 
         <div className="form-msg">{msg}</div>
