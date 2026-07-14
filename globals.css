@@ -39,7 +39,7 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 /* ---------- 刊头带（全站共用） ---------- */
 .band{position:fixed;top:0;left:0;right:0;z-index:20;background:var(--band);
   color:#F6EFE0;padding:14px clamp(20px,4vw,46px);display:flex;align-items:center;
-  justify-content:space-between;overflow-x:clip;overflow-y:visible}
+  justify-content:space-between;overflow:hidden}
 .band .band-avatar{display:flex;align-items:center;text-decoration:none;flex:0 0 auto}
 .band .band-avatar .avatar-dot{width:34px;height:34px;border-radius:50%;
   border:1.5px solid rgba(246,239,224,.55);background:rgba(246,239,224,.08);
@@ -686,7 +686,7 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 /* 头像下拉菜单 */
 .avatar-menu{position:relative}
 .avatar-dot.on{background:rgba(93,154,143,.28);border-color:rgba(246,239,224,.8);cursor:pointer}
-.avatar-drop{position:absolute;top:44px;left:0;z-index:30;min-width:132px;
+.avatar-drop{position:fixed;top:60px;left:clamp(20px,4vw,46px);z-index:60;min-width:132px;
   background:var(--paper);border:1px solid var(--hair);border-radius:8px;
   box-shadow:0 14px 30px -14px rgba(23,58,71,.45);padding:6px;
   display:flex;flex-direction:column}
