@@ -1,14 +1,26 @@
 'use client';
-// 刊头左侧的头像与名字。没登录去靠岸；登录后显示头像+名字，点开下拉菜单。
-// 菜单用 Portal 渲染到 body，脱离刊头的 overflow:hidden，不会被裁。
+// 刊头头像 + 名字。样式内联，不依赖 globals.css，避免缓存导致错位。
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
+const S = {
+  wrap: { display: 'flex', alignItems: 'center', flex: '0 0 auto' },
+  trigger: { display: 'flex', alignItems: 'center', gap: 9, background: 'none', border: 'none',
+    cursor: 'pointer', padding: 0, font: 'inherit', textDecoration: 'none' },
+  dot: { width: 32, height: 32, borderRadius: '50%', overflow: 'hidden', flex: '0 0 auto',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    border: '1.5px solid rgba(246,239,224,.5)', background: 'rgba(93,154,143,.32)' },
+  img: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' },
+  initial: { fontFamily: 'var(--font-hand), serif', fontSize: 16, color: '#F6EFE0', lineHeight: 1 },
+  name: { fontSize: 13.5, letterSpacing: '.06em', color: '#F6EFE0', whiteSpace: 'nowrap',
+    maxWidth: 130, overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1 },
+};
+
 export default function AvatarMenu() {
   const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState(null); // { username, avatar_url, roles, role }
+  const [profile, setProfile] = useState(null);
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ top: 0, left: 0 });
   const [mounted, setMounted] = useState(false);
@@ -49,9 +61,9 @@ export default function AvatarMenu() {
 
   if (!user) {
     return (
-      <Link className="band-avatar guest" href="/login" aria-label="靠岸 / 登录">
-        <span className="avatar-dot" />
-        <span className="avatar-name">靠岸</span>
+      <Link href="/login" aria-label="靠岸 / 登录" style={{ ...S.trigger }}>
+        <span style={S.dot} />
+        <span style={{ ...S.name, opacity: .72 }}>靠岸</span>
       </Link>
     );
   }
@@ -62,7 +74,7 @@ export default function AvatarMenu() {
   const isAdmin = profile?.role === 'admin';
 
   const menu = open && mounted ? createPortal(
-    <div className="avatar-drop" ref={menuRef} style={{ top: pos.top, left: pos.left }}>
+    <div ref={menuRef} className="avatar-drop" style={{ top: pos.top, left: pos.left }}>
       {roles.includes('songwriter') || isAdmin ? (
         <Link href="/studio" onClick={() => setOpen(false)}>工作台</Link>
       ) : null}
@@ -74,13 +86,12 @@ export default function AvatarMenu() {
   ) : null;
 
   return (
-    <div className="band-avatar avatar-menu">
-      <button ref={btnRef} className="avatar-trigger" onClick={openMenu}
-        aria-label="我的" aria-expanded={open}>
-        <span className="avatar-dot on">
-          {avatar ? <img src={avatar} alt="" /> : <span className="avatar-initial">{name.slice(0, 1)}</span>}
+    <div style={S.wrap}>
+      <button ref={btnRef} onClick={openMenu} style={S.trigger} aria-label="我的" aria-expanded={open}>
+        <span style={S.dot}>
+          {avatar ? <img src={avatar} alt="" style={S.img} /> : <span style={S.initial}>{name.slice(0, 1)}</span>}
         </span>
-        <span className="avatar-name">{name}</span>
+        <span style={S.name}>{name}</span>
       </button>
       {menu}
     </div>
