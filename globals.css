@@ -705,3 +705,30 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
   color:#173A47;text-decoration:none;background:none;border:none;cursor:pointer;
   border-radius:6px;transition:background .18s;white-space:nowrap}
 .avatar-drop a:hover,.avatar-drop button:hover{background:rgba(93,154,143,.16)}
+
+/* ============ 「我的」面板 ============ */
+.me-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:6px 0 30px}
+.me-tabs button{background:none;border:none;font-family:inherit;font-size:13.5px;letter-spacing:.1em;
+  color:var(--ink-soft);cursor:pointer;padding:7px 16px;border-radius:18px;transition:background .2s,color .2s}
+.me-tabs button:hover{color:var(--ink)}
+.me-tabs button.on{background:rgba(93,154,143,.16);color:var(--ink)}
+.me-body{min-height:200px}
+
+/* ============ 个人主页 /u/ ============ */
+.u-page{max-width:680px}
+.u-head{text-align:center;margin-bottom:10px}
+.u-avatar{width:88px;height:88px;border-radius:50%;overflow:hidden;margin:0 auto 18px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(93,154,143,.28);border:1.5px solid var(--hair)}
+.u-avatar img{width:100%;height:100%;object-fit:cover}
+.u-avatar span{font-family:var(--font-hand);font-size:40px;color:var(--band)}
+.u-name{font-family:var(--font-hand);font-weight:400;font-size:32px;letter-spacing:.08em;color:var(--ink);margin:0}
+.u-roles{font-size:12.5px;letter-spacing:.14em;color:var(--seal);margin-top:8px}
+.u-bio{font-size:14px;line-height:1.95;color:var(--ink-soft);font-weight:300;max-width:420px;
+  margin:16px auto 0}
+.u-links{margin-top:12px;font-size:12.5px}
+.u-links a{color:var(--band);text-decoration:none;border-bottom:1px solid var(--hair);padding-bottom:2px}
+.u-page .hairline{margin:28px auto}
+.u-section{margin-top:10px}
+.u-sec-title{text-align:center;font-family:var(--font-hand);font-weight:400;font-size:22px;
+  letter-spacing:.1em;color:var(--ink);margin-bottom:20px}
