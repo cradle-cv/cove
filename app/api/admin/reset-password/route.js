@@ -3,15 +3,26 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-const admin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-
 export const runtime = 'nodejs';
+
+// 延迟创建：只在请求进来时建 client，避免构建阶段因缺环境变量而失败
+function getAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
+}
 
 export async function POST(request) {
   try {
+    const admin = getAdmin();
+    if (!admin) {
+      return NextResponse.json(
+        { error: '服务端未配置 SUPABASE_SERVICE_ROLE_KEY，无法重置密码。' },
+        { status: 503 }
+      );
+    }
+
     const { callerToken, userId, newPassword } = await request.json();
 
     if (!newPassword || newPassword.length < 6) {
@@ -21,7 +32,7 @@ export async function POST(request) {
       return NextResponse.json({ error: '缺少参数' }, { status: 400 });
     }
 
-    // 1) 校验调用者是管理员（用它的 access token 反查身份）
+    // 1) 校验调用者是管理员
     const { data: caller } = await admin.auth.getUser(callerToken);
     const callerAuthId = caller?.user?.id;
     if (!callerAuthId) return NextResponse.json({ error: '未登录' }, { status: 401 });
@@ -36,7 +47,7 @@ export async function POST(request) {
       .select('auth_id').eq('id', userId).maybeSingle();
     if (!target?.auth_id) return NextResponse.json({ error: '用户不存在或未绑定登录' }, { status: 404 });
 
-    // 3) 用 admin API 改密码
+    // 3) 改密码
     const { error } = await admin.auth.admin.updateUserById(target.auth_id, {
       password: newPassword,
     });
