@@ -46,7 +46,7 @@ export default async function UserPage({ params }) {
 
       {poems && poems.length > 0 ? (
         <section className="u-section">
-          <h2 className="u-sec-title">海玻璃</h2>
+          <h2 className="u-sec-title">玻璃海滩</h2>
           <div className="beach">
             {poems.map((poem, i) => (
               <Link key={poem.id} href={`/glass/${poem.id}`}
