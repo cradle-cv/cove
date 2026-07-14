@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import AudioUploader from '@/components/AudioUploader';
+import MultiImageUploader from '@/components/MultiImageUploader';
 
 const COLORS = [
   ['green', '海玻璃绿'],
@@ -16,7 +17,7 @@ const COLORS = [
 
 export default function GlassSubmit() {
   const [user, setUser] = useState(null);
-  const [form, setForm] = useState({ poet_name: '', title: '', body: '', glass_color: 'green', gen_note: '', audio: '' });
+  const [form, setForm] = useState({ poet_name: '', title: '', body: '', glass_color: 'green', gen_note: '', audio: '', images: [] });
   const [msg, setMsg] = useState('');
   const [done, setDone] = useState(false);
 
@@ -37,6 +38,7 @@ export default function GlassSubmit() {
       glass_color: form.glass_color,
       gen_note: form.gen_note.trim() || null,
       audio_src: form.audio ? [form.audio] : null,
+      images: form.images.length ? form.images : null,
     });
     if (error) { setMsg('没有放上去：' + error.message); return; }
     setDone(true);
@@ -97,6 +99,12 @@ export default function GlassSubmit() {
         <AudioUploader
           value={form.audio}
           onDone={({ url }) => setForm((f) => ({ ...f, audio: url }))}
+        />
+
+        <label>图片（可选，多张会在页面里缓慢轮播）</label>
+        <MultiImageUploader
+          value={form.images}
+          onChange={(imgs) => setForm((f) => ({ ...f, images: imgs }))}
         />
 
         <label>灵感来源（可选）</label>
