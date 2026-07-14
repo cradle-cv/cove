@@ -25,6 +25,7 @@ export default function AvatarMenu() {
   const [pos, setPos] = useState({ top: 0, left: 0 });
   const [mounted, setMounted] = useState(false);
   const btnRef = useRef(null);
+  const uidRef = useRef(null);
   const menuRef = useRef(null);
 
   useEffect(() => { setMounted(true); }, []);
@@ -38,8 +39,16 @@ export default function AvatarMenu() {
         .select('username, avatar_url, roles, role').eq('auth_id', sess.user.id).maybeSingle();
       if (alive) setProfile(data || {});
     }
-    supabase.auth.getSession().then(({ data: { session } }) => load(session));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => load(s));
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      uidRef.current = session?.user?.id || null;
+      load(session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, s) => {
+      const uid = s?.user?.id || null;
+      if (uid === uidRef.current) return; // 用户没变（token 刷新/切回标签）→ 忽略
+      uidRef.current = uid;
+      load(s);
+    });
     return () => { alive = false; subscription.unsubscribe(); };
   }, []);
 
