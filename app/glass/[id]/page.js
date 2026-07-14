@@ -54,22 +54,23 @@ export default async function GlassDetail({ params }) {
         <h1 className="gd-title">{p.title}</h1>
         <div className="gd-poet">{p.poet_name}</div>
 
-        {/* 播放器 */}
-        {audio ? (
-          <div className="poem-audio">
-            <GlassTide src={audio} color={p.glass_color} />
-            {p.gen_note ? <p className="pa-note">{p.gen_note}</p> : null}
-          </div>
-        ) : (
-          <p className="poem-noaudio">这一枚还没有配上它的音乐</p>
-        )}
-
         {/* 正文：诗居中 / 故事左对齐 */}
         <article className={'gd-body' + (isStory ? ' as-story' : ' as-poem')}>
           {text.split('\n').map((line, i) =>
             line.trim() ? <p key={i}>{line}</p> : <p key={i} className="blank">&nbsp;</p>
           )}
         </article>
+
+        {/* 播放器：放在正文下方，读完文字再听 */}
+        {audio ? (
+          <div className="poem-audio">
+            <div className="pa-cap">从这首诗里长出来的音乐</div>
+            <GlassTide src={audio} color={p.glass_color} />
+            {p.gen_note ? <p className="pa-note">{p.gen_note}</p> : null}
+          </div>
+        ) : (
+          <p className="poem-noaudio">这一枚还没有配上它的音乐</p>
+        )}
 
         <PoemNotes poemId={p.id} initialNotes={notes || []} />
 
