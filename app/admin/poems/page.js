@@ -6,6 +6,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import AudioUploader from '@/components/AudioUploader';
+import MultiImageUploader from '@/components/MultiImageUploader';
 
 const STATUS_CN = { pending: '待审核', published: '已发布', hidden: '已隐藏' };
 const COLORS = [
@@ -47,6 +48,7 @@ export default function AdminPoemsPage() {
       gen_note: editing.gen_note?.trim() || null,
       audio_src: editing.audio ? [editing.audio]
         : (Array.isArray(editing.audio_src) ? editing.audio_src : null),
+      images: Array.isArray(editing.images) && editing.images.length ? editing.images : null,
     }).eq('id', editing.id);
     if (error) { setMsg('保存失败：' + error.message); return; }
     setEditing(null); setMsg(''); load();
@@ -76,6 +78,12 @@ export default function AdminPoemsPage() {
         <AudioUploader
           value={editing.audio || (Array.isArray(editing.audio_src) ? editing.audio_src[0] : '')}
           onDone={({ url }) => setEditing((p) => ({ ...p, audio: url }))}
+        />
+
+        <label>图片（多张会在详情页缓慢轮播）</label>
+        <MultiImageUploader
+          value={editing.images || []}
+          onChange={(imgs) => setEditing({ ...editing, images: imgs })}
         />
 
         <label>灵感来源（可选）</label>
