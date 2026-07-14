@@ -684,6 +684,24 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 .glass-back{text-align:center;margin-top:44px;font-size:12.5px}
 
 /* 头像下拉菜单 */
+
+/* 头像触发器：头像圆 + 名字 */
+.band .band-avatar.avatar-menu{flex:0 0 auto}
+.avatar-trigger{display:flex;align-items:center;gap:10px;background:none;border:none;
+  cursor:pointer;padding:0;font-family:inherit}
+.avatar-trigger .avatar-dot{width:34px;height:34px;border-radius:50%;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  border:1.5px solid rgba(246,239,224,.55);background:rgba(93,154,143,.28)}
+.avatar-trigger .avatar-dot img{width:100%;height:100%;object-fit:cover}
+.avatar-initial{font-family:var(--font-hand);font-size:17px;color:#F6EFE0;line-height:1}
+.avatar-name{font-size:13.5px;letter-spacing:.08em;color:#F6EFE0;white-space:nowrap;max-width:120px;
+  overflow:hidden;text-overflow:ellipsis}
+.avatar-trigger:hover .avatar-name{opacity:.82}
+/* 访客态：靠岸 */
+.band-avatar.guest{display:flex;align-items:center;gap:10px;text-decoration:none}
+.band-avatar.guest .avatar-name{opacity:.75}
+@media (max-width:720px){ .avatar-name{display:none} }
+
 .avatar-menu{position:relative}
 .avatar-dot.on{background:rgba(93,154,143,.28);border-color:rgba(246,239,224,.8);cursor:pointer}
 .avatar-drop{position:fixed;top:62px;left:clamp(20px,4vw,46px);z-index:200;
