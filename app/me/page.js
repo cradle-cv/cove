@@ -5,6 +5,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import ImageUploader from '@/components/ImageUploader';
 
 const ROLE_CN = { songwriter: '词曲者', performer: '歌手/乐手', producer: '制作人', organization: '音乐机构' };
 
@@ -132,8 +133,11 @@ function ProfileTab({ profile, user, onSaved }) {
       <label>主页地址（英文/数字，用于 cove.ge/u/你的地址）</label>
       <input value={f.handle} onChange={(e) => setF({ ...f, handle: e.target.value })} placeholder="例如 seeway" />
 
-      <label>头像图片链接（可先留空，显示名字首字）</label>
-      <input value={f.avatar_url} onChange={(e) => setF({ ...f, avatar_url: e.target.value })} placeholder="https://…" />
+      <label>头像</label>
+      <ImageUploader
+        value={f.avatar_url}
+        onDone={({ url }) => setF((p) => ({ ...p, avatar_url: url }))}
+      />
 
       <label>简介</label>
       <textarea rows={4} value={f.bio} onChange={(e) => setF({ ...f, bio: e.target.value })} />
