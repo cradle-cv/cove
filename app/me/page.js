@@ -91,7 +91,7 @@ export default function MePage() {
         {tab === 'studio' && <JumpTab href="/studio" label="进入词曲工作台" desc="上传词与曲，用 AI 生成小样。" />}
         {tab === 'invites' && <InvitesTab user={user} />}
         {tab === 'page' && <PageTab profile={profile} />}
-        {tab === 'admin' && <JumpTab href="/admin" label="进入管理室" desc="海玻璃审核、身份申请、排期等。" />}
+        {tab === 'admin' && <JumpTab href="/admin" label="进入管理室" desc="玻璃海滩审核、身份申请、排期等。" />}
       </div>
     </main>
   );
@@ -164,7 +164,7 @@ function PostsTab({ user }) {
   const STATUS_CN = { pending: '审核中', published: '已发布', hidden: '已隐藏' };
   if (poems === null) return <p className="dredging">正在取</p>;
   if (poems.length === 0) return (
-    <p className="dredging">还没有投稿。<Link href="/glass/submit">去海玻璃放一枚 →</Link></p>
+    <p className="dredging">还没有投稿。<Link href="/glass/submit">去玻璃海滩放一枚 →</Link></p>
   );
   return (
     <div style={{ maxWidth: 560, margin: '0 auto' }}>
