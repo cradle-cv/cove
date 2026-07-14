@@ -1,6 +1,15 @@
 'use client';
-// 一组图片，缓慢淡入淡出地轮播。和诗分区，单独一栏。
+// 一组图片，缓慢淡入淡出地轮播。
+// 图片经 wsrv.nl 实时压缩到显示尺寸（不追求高清，只求最快显示）。
+// 第一张加载完成后通过 onFirstLoad 通知父组件（用来和音乐同步）。
 import { useState, useEffect } from 'react';
+
+// 把原图 URL 包成压缩版：宽 720（够 2x 高清屏用），质量 68，输出 webp
+function thumb(url, w = 720) {
+  if (!url) return url;
+  const bare = url.replace(/^https?:\/\//, '');
+  return `https://wsrv.nl/?url=${encodeURIComponent(bare)}&w=${w}&q=68&output=webp&we`;
+}
 
 export default function PoemGallery({ images = [] }) {
   const [idx, setIdx] = useState(0);
@@ -20,9 +29,12 @@ export default function PoemGallery({ images = [] }) {
         {list.map((src, i) => (
           <img
             key={src}
-            src={src}
+            src={thumb(src)}
             alt=""
             className={'pg-img' + (i === idx ? ' on' : '')}
+            loading="eager"
+            fetchPriority={i === 0 ? 'high' : 'auto'}
+            onError={(e) => { if (e.target.src !== src) e.target.src = src; }}
           />
         ))}
       </div>
