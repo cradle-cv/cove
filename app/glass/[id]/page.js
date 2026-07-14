@@ -24,6 +24,11 @@ export default async function GlassDetail({ params }) {
   const images = Array.isArray(p.images) ? p.images.filter(Boolean) : [];
   const hasImages = images.length > 0;
 
+  // 长短判断：正文超过约 180 字（或超过 12 行），当作故事，左对齐；否则当诗，居中
+  const text = p.body || '';
+  const lineCount = text.split('\n').filter((l) => l.trim()).length;
+  const isStory = text.replace(/\s/g, '').length > 180 || lineCount > 12;
+
   const { data: notes } = await supabase
     .from('cove_poem_notes').select('id, visitor_name, body, created_at')
     .eq('poem_id', id).order('created_at', { ascending: false });
@@ -35,40 +40,36 @@ export default async function GlassDetail({ params }) {
         <span className="glow-a" /><span className="glow-b" /><span className="glow-c" />
       </div>
 
-      <div className="gd-inner">
+      <div className="gd-inner gd-centered">
         <div className="gd-eyebrow">Sea Glass</div>
 
-        {/* 左图右文（无图时诗居中占满） */}
-        <div className={'gd-stage' + (hasImages ? ' has-img' : '')}>
-          {hasImages ? (
-            <div className="gd-left">
-              <PoemGallery images={images} />
-            </div>
-          ) : null}
-
-          <div className="gd-right">
-            <article className="glass-slab">
-              <div className="slab-shine" aria-hidden="true" />
-              <h1 className="gd-title">{p.title}</h1>
-              <div className="gd-poet">{p.poet_name}</div>
-              <div className="gd-body">
-                {p.body.split('\n').map((line, i) =>
-                  line.trim() ? <p key={i}>{line}</p> : <p key={i} className="blank">&nbsp;</p>
-                )}
-              </div>
-            </article>
+        {/* 图片：居中当封面 */}
+        {hasImages ? (
+          <div className="gd-cover">
+            <PoemGallery images={images} />
           </div>
-        </div>
+        ) : null}
 
+        {/* 标题 · 署名 */}
+        <h1 className="gd-title">{p.title}</h1>
+        <div className="gd-poet">{p.poet_name}</div>
+
+        {/* 播放器 */}
         {audio ? (
           <div className="poem-audio">
-            <div className="pa-cap">从这首诗里长出来的音乐</div>
             <GlassTide src={audio} color={p.glass_color} />
             {p.gen_note ? <p className="pa-note">{p.gen_note}</p> : null}
           </div>
         ) : (
           <p className="poem-noaudio">这一枚还没有配上它的音乐</p>
         )}
+
+        {/* 正文：诗居中 / 故事左对齐 */}
+        <article className={'gd-body' + (isStory ? ' as-story' : ' as-poem')}>
+          {text.split('\n').map((line, i) =>
+            line.trim() ? <p key={i}>{line}</p> : <p key={i} className="blank">&nbsp;</p>
+          )}
+        </article>
 
         <PoemNotes poemId={p.id} initialNotes={notes || []} />
 
