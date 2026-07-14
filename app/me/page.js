@@ -60,9 +60,27 @@ export default function MePage() {
         <div className="hairline" />
       </div>
 
-      <nav className="me-tabs">
+      <nav style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, margin: '6px 0 34px' }}>
         {TABS.map(([k, label]) => (
-          <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>{label}</button>
+          <button
+            key={k}
+            onClick={() => setTab(k)}
+            style={{
+              background: tab === k ? 'rgba(93,154,143,.18)' : 'transparent',
+              border: 'none',
+              fontFamily: 'inherit',
+              fontSize: 13.5,
+              letterSpacing: '.1em',
+              color: tab === k ? 'var(--ink)' : 'var(--ink-soft)',
+              cursor: 'pointer',
+              padding: '8px 18px',
+              borderRadius: 20,
+              transition: 'background .2s, color .2s',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {label}
+          </button>
         ))}
       </nav>
 
