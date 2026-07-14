@@ -13,7 +13,7 @@ const MENU = [
   { href: '/admin/interviews', label: '电台专访' },
   { href: '/admin/festivals', label: '音乐节' },
   { href: '/admin/partners', label: '邻港' },
-  { href: '/admin/poems', label: '海玻璃审核' },
+  { href: '/admin/poems', label: '玻璃海滩审核' },
   { href: '/admin/applications', label: '身份申请审核' },
 ];
 
