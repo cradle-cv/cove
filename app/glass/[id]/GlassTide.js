@@ -84,8 +84,11 @@ export default function GlassTide({ src, color = 'green' }) {
         preload="auto"
         onLoadedMetadata={(e) => {
           setDur(e.target.duration || 0);
-          // 尝试自动播放；浏览器可能因未交互而拦截，拦了就等用户点
-          e.target.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+          // 延迟一点自动播放，让图片先显示出来，做到图乐大致同步。
+          const el = e.target;
+          setTimeout(() => {
+            el.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+          }, 1000);
         }}
         onTimeUpdate={(e) => {
           const a = e.target;
