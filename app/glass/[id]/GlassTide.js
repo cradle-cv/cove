@@ -49,6 +49,27 @@ export default function GlassTide({ src, color = 'green' }) {
   }, [wave, progress, rgb]);
 
   useEffect(() => { draw(); }, [draw]);
+
+  // 若自动播放被浏览器拦截，用户第一次与页面交互时补播一次
+  useEffect(() => {
+    if (playing) return;
+    const kick = () => {
+      const a = audioRef.current;
+      if (a && a.paused) {
+        a.play().then(() => setPlaying(true)).catch(() => {});
+      }
+      cleanup();
+    };
+    const cleanup = () => {
+      window.removeEventListener('pointerdown', kick);
+      window.removeEventListener('keydown', kick);
+      window.removeEventListener('scroll', kick);
+    };
+    window.addEventListener('pointerdown', kick, { once: true });
+    window.addEventListener('keydown', kick, { once: true });
+    window.addEventListener('scroll', kick, { once: true, passive: true });
+    return cleanup;
+  }, [playing]);
   useEffect(() => {
     const on = () => draw();
     window.addEventListener('resize', on);
@@ -84,11 +105,9 @@ export default function GlassTide({ src, color = 'green' }) {
         preload="auto"
         onLoadedMetadata={(e) => {
           setDur(e.target.duration || 0);
-          // 延迟一点自动播放，让图片先显示出来，做到图乐大致同步。
-          const el = e.target;
-          setTimeout(() => {
-            el.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
-          }, 1000);
+          // 立即尝试自动播放。不能用 setTimeout 延迟——延迟会丢失浏览器
+          // 因用户点击而获得的自动播放许可，导致被拦。图片已压缩，本就够快。
+          e.target.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
         }}
         onTimeUpdate={(e) => {
           const a = e.target;
