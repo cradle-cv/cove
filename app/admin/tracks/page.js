@@ -46,7 +46,7 @@ export default function AdminTracksPage() {
 
   const load = useCallback(async () => {
     const [{ data: t }, { data: m }] = await Promise.all([
-      supabase.from('cove_tracks').select('*, cove_musicians(name)').order('created_at', { ascending: false }),
+      supabase.from('cove_tracks').select('*, cove_musicians(name)').order('created_at', { ascending: false }).order('id', { ascending: true }),
       supabase.from('cove_musicians').select('id, name').eq('status', 'active'),
     ]);
     setTracks(t || []); setMusicians(m || []);
