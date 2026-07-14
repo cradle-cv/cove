@@ -78,7 +78,7 @@ export default function AdminPoemsPage() {
           onDone={({ url }) => setEditing((p) => ({ ...p, audio: url }))}
         />
 
-        <label>生成手记</label>
+        <label>灵感来源（可选）</label>
         <textarea rows={3} value={editing.gen_note || ''} onChange={(e) => setEditing({ ...editing, gen_note: e.target.value })} />
 
         <div className="form-msg">{msg}</div>
@@ -137,7 +137,7 @@ function Row({ p, setStatus, setEditing, remove }) {
           {audio ? <audio controls preload="none" src={audio} style={{ width: '100%', marginTop: 12 }} /> : null}
           {p.gen_note ? (
             <p style={{ marginTop: 12, fontSize: 12.5, color: 'var(--ink-soft)', lineHeight: 1.9 }}>
-              生成手记：{p.gen_note}
+              灵感来源：{p.gen_note}
             </p>
           ) : null}
         </div>
