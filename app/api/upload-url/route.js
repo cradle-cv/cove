@@ -13,6 +13,10 @@ const ALLOWED = {
   'audio/mp3': '.mp3',
   'audio/webm': '.webm',
   'audio/ogg': '.ogg',
+  'image/jpeg': '.jpg',
+  'image/png': '.png',
+  'image/webp': '.webp',
+  'image/gif': '.gif',
 };
 
 export async function POST(req) {
@@ -22,7 +26,7 @@ export async function POST(req) {
     return NextResponse.json({ error: '缺少文件名或类型' }, { status: 400 });
   }
   if (!ALLOWED[contentType]) {
-    return NextResponse.json({ error: '只接受 mp3 / webm / ogg 音频' }, { status: 400 });
+    return NextResponse.json({ error: '只接受 mp3 / webm / ogg 音频，或 jpg / png / webp 图片' }, { status: 400 });
   }
   if (typeof size === 'number' && size > MAX_BYTES) {
     return NextResponse.json({ error: `文件超过 10MB（当前 ${(size / 1048576).toFixed(1)}MB）` }, { status: 400 });
