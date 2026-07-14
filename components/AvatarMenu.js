@@ -75,11 +75,10 @@ export default function AvatarMenu() {
 
   const menu = open && mounted ? createPortal(
     <div ref={menuRef} className="avatar-drop" style={{ top: pos.top, left: pos.left }}>
-      {roles.includes('songwriter') || isAdmin ? (
-        <Link href="/studio" onClick={() => setOpen(false)}>工作台</Link>
-      ) : null}
+      <Link href="/me" onClick={() => setOpen(false)}>我的</Link>
+      {profile?.handle ? <Link href={`/u/${profile.handle}`} onClick={() => setOpen(false)}>我的主页</Link> : null}
       <Link href="/apply" onClick={() => setOpen(false)}>身份申请</Link>
-      {isAdmin ? <Link href="/admin" onClick={() => setOpen(false)}>管理室</Link> : null}
+      {isAdmin ? <Link href="/admin" onClick={() => setOpen(false)}>后台</Link> : null}
       <button onClick={() => { supabase.auth.signOut(); setOpen(false); }}>退出</button>
     </div>,
     document.body
