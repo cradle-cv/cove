@@ -853,9 +853,9 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 
 /* ---- 左图右文 ---- */
 .gd-stage{display:flex;justify-content:center}
-.gd-stage.has-img{gap:36px;align-items:stretch;text-align:left}
-.gd-stage.has-img .gd-left{flex:1 1 0;min-width:0;display:flex;align-items:center}
-.gd-stage.has-img .gd-right{flex:1 1 0;min-width:0;display:flex}
+.gd-stage.has-img{gap:40px;align-items:flex-start;text-align:left}
+.gd-stage.has-img .gd-left{flex:5 1 0;min-width:0;position:sticky;top:90px}
+.gd-stage.has-img .gd-right{flex:6 1 0;min-width:0;display:flex}
 .gd-stage.has-img .poem-gallery{margin:0;width:100%}
 .gd-stage.has-img .glass-slab{width:100%}
 .gd-stage.has-img .gd-title,.gd-stage.has-img .gd-poet,.gd-stage.has-img .gd-body p{text-align:left}
