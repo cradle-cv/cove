@@ -21,7 +21,7 @@ const NAV = [
   { href: '/festival', label: '每日演出' },
   { href: '/records', label: '打捞碎月' },
   { href: '/dock', label: '原创码头' },
-  { href: '/glass', label: '海玻璃' },
+  { href: '/glass', label: '玻璃海滩' },
   { href: '/musicians', label: '音乐人' },
   { href: '/radio', label: '海角电台' },
   { href: '/lighthouse', label: '灯塔' },
