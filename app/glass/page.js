@@ -1,112 +1,56 @@
-'use client';
-// 把一枚放到滩上 · 诗人上传
-// 登录后可传：诗 + 颜色 + 音乐（AI 辅助生成后的音频文件）+ 一段生成手记。
-// 上传后是 pending，管理员放行后才出现在滩上。
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
-import AudioUploader from '@/components/AudioUploader';
 
-const COLORS = [
-  ['green', '海玻璃绿'],
-  ['blue', '瓶底蓝'],
-  ['amber', '琥珀'],
-  ['white', '乳白'],
-];
+export const revalidate = 120;
+export const metadata = { title: '玻璃海滩 · Cove' };
 
-export default function GlassSubmit() {
-  const [user, setUser] = useState(null);
-  const [form, setForm] = useState({ poet_name: '', title: '', body: '', glass_color: 'green', gen_note: '', audio: '' });
-  const [msg, setMsg] = useState('');
-  const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data?.user || null));
-  }, []);
-
-  const submit = async () => {
-    if (!form.poet_name.trim() || !form.title.trim() || !form.body.trim()) {
-      setMsg('署名、标题、诗的正文都要有'); return;
-    }
-    setMsg('正在放到滩上…');
-    const { error } = await supabase.from('cove_poems').insert({
-      author_auth_id: user.id,
-      poet_name: form.poet_name.trim(),
-      title: form.title.trim(),
-      body: form.body,
-      glass_color: form.glass_color,
-      gen_note: form.gen_note.trim() || null,
-      audio_src: form.audio ? [form.audio] : null,
-    });
-    if (error) { setMsg('没有放上去：' + error.message); return; }
-    setDone(true);
-  };
-
-  if (user === null) {
-    return (
-      <main className="sheet">
-        <div className="sheet-head">
-          <div className="no">Sea Glass</div>
-          <div className="th">海玻璃</div>
-          <div className="sub">先<Link href="/login" style={{ margin: '0 4px' }}>靠岸</Link>，才能把东西放到滩上。</div>
-          <div className="hairline" />
-        </div>
-      </main>
-    );
-  }
-
-  if (done) {
-    return (
-      <main className="sheet">
-        <div className="sheet-head">
-          <div className="no">Sea Glass</div>
-          <div className="th">放好了</div>
-          <div className="sub">这一枚先在水里泡一阵，守滩的人看过之后，它会自己被冲上来。</div>
-          <div className="hairline" />
-        </div>
-        <p className="glass-back" style={{ textAlign: 'center' }}><Link href="/glass">回到滩上 →</Link></p>
-      </main>
-    );
-  }
+// 海玻璃：被海水磨了很多年的碎玻璃，冲上岸时棱角没了，颜色还在。
+// 每一枚封着一首诗，和一段从这首诗里长出来的音乐。
+export default async function GlassPage() {
+  const { data: poems } = await supabase
+    .from('cove_poems')
+    .select('id, poet_name, title, body, glass_color, audio_src, created_at')
+    .eq('status', 'published')
+    .order('created_at', { ascending: false });
 
   return (
     <main className="sheet">
       <div className="sheet-head">
         <div className="no">Sea Glass</div>
-        <div className="th">把一枚放到滩上</div>
-        <div className="sub">一首诗，一种颜色，和你用 AI 从这首诗里做出来的音乐。</div>
+        <div className="th">玻璃海滩</div>
+        <div className="sub">
+          写下的诗与故事，像海水磨了很多年的玻璃，一片片冲上岸。<br />
+          捡起任意一枚，里面有一首诗，和从这首诗里长出来的一段音乐。
+        </div>
         <div className="hairline" />
       </div>
 
-      <div className="cove-form" style={{ maxWidth: 560, margin: '0 auto' }}>
-        <label>署名（可以是笔名）</label>
-        <input value={form.poet_name} onChange={(e) => setForm({ ...form, poet_name: e.target.value })} />
-
-        <label>标题</label>
-        <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-
-        <label>诗（保留换行）</label>
-        <textarea rows={10} value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} />
-
-        <label>这一枚的颜色</label>
-        <select value={form.glass_color} onChange={(e) => setForm({ ...form, glass_color: e.target.value })}>
-          {COLORS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-        </select>
-
-        <label>音乐（在 Suno 等工具里生成后，把音频传上来；mp3，10MB 以内）</label>
-        <AudioUploader
-          value={form.audio}
-          onDone={({ url }) => setForm((f) => ({ ...f, audio: url }))}
-        />
-
-        <label>生成手记（这段音乐是怎么从诗里来的，可不填）</label>
-        <textarea rows={3} value={form.gen_note} onChange={(e) => setForm({ ...form, gen_note: e.target.value })} />
-
-        <div className="form-msg">{msg}</div>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <button className="btn" onClick={submit}>放到滩上</button>
+      {poems && poems.length > 0 ? (
+        <div className="beach">
+          {poems.map((p, i) => (
+            <Link key={p.id} href={`/glass/${p.id}`}
+              className={`glass g-${p.glass_color} tilt-${i % 5}`}>
+              <span className="g-title">{p.title}</span>
+              <span className="g-line">{firstLine(p.body)}</span>
+              <span className="g-poet">{p.poet_name}</span>
+              {Array.isArray(p.audio_src) && p.audio_src.length ? (
+                <span className="g-sound" aria-label="有音乐" />
+              ) : null}
+            </Link>
+          ))}
         </div>
-      </div>
+      ) : (
+        <p className="dredging">滩上还没有捡到东西</p>
+      )}
+
+      <p className="glass-submit-line">
+        写诗的人，可以<Link href="/glass/submit">把一枚放到滩上</Link>
+      </p>
     </main>
   );
+}
+
+function firstLine(body) {
+  const l = (body || '').split('\n').map((x) => x.trim()).filter(Boolean)[0] || '';
+  return l.length > 18 ? l.slice(0, 18) + '…' : l;
 }
