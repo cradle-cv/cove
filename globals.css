@@ -630,27 +630,34 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 /* ============ 海玻璃 ============ */
 /* 卡片用海玻璃真实的色谱：绿、瓶底蓝、琥珀、乳白、稀有的赭红。
    不规则圆角、微微透光、各自歪一点，像退潮后散在滩上。 */
-.beach{max-width:760px;margin:0 auto;display:flex;flex-wrap:wrap;gap:22px;justify-content:center}
-.glass{position:relative;width:200px;min-height:150px;padding:22px 20px 18px;
-  display:flex;flex-direction:column;gap:8px;text-decoration:none;
-  backdrop-filter:blur(2px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.55), inset 0 -6px 14px rgba(255,255,255,.18),
-             0 10px 24px -14px rgba(23,58,71,.4);
-  transition:transform .35s cubic-bezier(.22,.61,.36,1), box-shadow .35s}
-.glass:hover{transform:translateY(-4px) rotate(0deg) !important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6), 0 16px 30px -14px rgba(23,58,71,.5)}
-/* 每一枚形状都不太一样 */
-.tilt-0{border-radius:46% 54% 52% 48% / 55% 46% 54% 45%;transform:rotate(-2.2deg)}
-.tilt-1{border-radius:54% 46% 44% 56% / 46% 55% 45% 54%;transform:rotate(1.6deg)}
-.tilt-2{border-radius:48% 52% 56% 44% / 52% 48% 52% 48%;transform:rotate(-1deg)}
-.tilt-3{border-radius:52% 48% 46% 54% / 44% 54% 46% 56%;transform:rotate(2.4deg)}
-.tilt-4{border-radius:44% 56% 50% 50% / 56% 44% 56% 44%;transform:rotate(-1.8deg)}
+.beach{max-width:820px;margin:0 auto;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
+.glass{position:relative;min-height:180px;padding:24px 22px 20px;border-radius:14px;
+  display:flex;flex-direction:column;text-decoration:none;overflow:hidden;
+  border:1px solid rgba(255,255,255,.4);
+  box-shadow:0 10px 28px -16px rgba(23,58,71,.45), inset 0 1px 0 rgba(255,255,255,.5);
+  transition:transform .3s cubic-bezier(.22,.61,.36,1), box-shadow .3s}
+.glass:hover{transform:translateY(-5px);
+  box-shadow:0 18px 36px -16px rgba(23,58,71,.5), inset 0 1px 0 rgba(255,255,255,.6)}
+/* 磨砂玻璃的高光，斜切一道 */
+.glass::before{content:"";position:absolute;top:-40%;left:-30%;width:80%;height:160%;
+  background:linear-gradient(120deg,rgba(255,255,255,.32),transparent 60%);
+  transform:rotate(12deg);pointer-events:none}
+.glass .g-title{font-family:var(--font-hand);font-weight:400;font-size:24px;
+  letter-spacing:.06em;color:var(--ink);line-height:1.3;position:relative}
+.glass .g-line{font-size:13px;line-height:1.85;color:var(--ink-soft);font-weight:300;
+  margin-top:10px;position:relative;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.glass .g-poet{font-size:11.5px;letter-spacing:.18em;color:var(--ink-soft);opacity:.72;
+  margin-top:auto;padding-top:16px;position:relative}
+.glass .g-sound{position:absolute;top:18px;right:18px;width:7px;height:7px;border-radius:50%;
+  background:var(--seal);opacity:.75;z-index:2}
 /* 色谱 */
-.g-green{background:rgba(122,178,158,.4);border:1px solid rgba(93,154,143,.5)}
-.g-blue{background:rgba(96,140,178,.38);border:1px solid rgba(74,116,152,.5)}
-.g-amber{background:rgba(214,168,102,.36);border:1px solid rgba(182,138,80,.5)}
-.g-white{background:rgba(244,242,236,.6);border:1px solid rgba(180,184,182,.55)}
-.g-red{background:rgba(178,96,80,.34);border:1px solid rgba(150,76,62,.5)}
+.g-green{background:linear-gradient(150deg,rgba(140,192,172,.62),rgba(108,168,150,.5));border-color:rgba(93,154,143,.55)}
+.g-blue{background:linear-gradient(150deg,rgba(126,166,200,.6),rgba(96,140,178,.5));border-color:rgba(74,116,152,.55)}
+.g-amber{background:linear-gradient(150deg,rgba(224,182,120,.6),rgba(200,152,88,.5));border-color:rgba(182,138,80,.55)}
+.g-white{background:linear-gradient(150deg,rgba(248,246,240,.82),rgba(226,228,224,.7));border-color:rgba(180,184,182,.6)}
+.g-red{background:linear-gradient(150deg,rgba(196,116,98,.55),rgba(168,88,72,.48));border-color:rgba(150,76,62,.55)}
 .glass .g-title{font-family:var(--font-hand);font-weight:400;font-size:22px;
   letter-spacing:.08em;color:var(--ink)}
 .glass .g-line{font-size:12px;line-height:1.8;color:var(--ink-soft);font-weight:300;flex:1}
@@ -732,3 +739,144 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 .u-section{margin-top:10px}
 .u-sec-title{text-align:center;font-family:var(--font-hand);font-weight:400;font-size:22px;
   letter-spacing:.1em;color:var(--ink);margin-bottom:20px}
+
+/* ============ 玻璃海滩 · 单枚详情（熠熠生辉版）============ */
+.glass-detail{position:relative;min-height:100vh;overflow:hidden;
+  padding:70px clamp(20px,5vw,40px) 90px}
+/* 光晕背景：三团柔光缓慢漂浮，颜色随玻璃 */
+.gd-glow{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.gd-glow span{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;
+  animation:glowDrift 18s ease-in-out infinite}
+.gd-glow .glow-a{width:46vw;height:46vw;top:-8%;left:-6%;animation-delay:0s}
+.gd-glow .glow-b{width:38vw;height:38vw;top:30%;right:-10%;animation-delay:-6s}
+.gd-glow .glow-c{width:34vw;height:34vw;bottom:-8%;left:24%;animation-delay:-12s}
+@keyframes glowDrift{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(4%,-3%) scale(1.08)}
+  66%{transform:translate(-3%,4%) scale(.95)}
+}
+/* 每种颜色的三团光 */
+.gd-blue  .glow-a{background:#7ea6c8}.gd-blue  .glow-b{background:#9cc0da}.gd-blue  .glow-c{background:#5d7f94}
+.gd-green .glow-a{background:#8cc0ac}.gd-green .glow-b{background:#6ca896}.gd-green .glow-c{background:#acd2c2}
+.gd-amber .glow-a{background:#e0b678}.gd-amber .glow-b{background:#c89858}.gd-amber .glow-c{background:#eccfa0}
+.gd-white .glow-a{background:#e6e8e4}.gd-white .glow-b{background:#cfd2ce}.gd-white .glow-c{background:#f4f2ec}
+.gd-red   .glow-a{background:#c47462}.gd-red   .glow-b{background:#a85848}.gd-red   .glow-c{background:#d89a86}
+
+.gd-inner{position:relative;z-index:1;max-width:640px;margin:0 auto;text-align:center;padding:0 clamp(20px,5vw,30px)}
+.gd-eyebrow{font-family:var(--font-display);font-size:12px;letter-spacing:.42em;
+  text-transform:uppercase;color:var(--seal);opacity:.7;margin-bottom:26px}
+
+/* 诗安放在一枚半透明玻璃板上 */
+.glass-slab{position:relative;border-radius:20px;padding:44px 38px 48px;overflow:hidden;
+  background:rgba(255,255,255,.28);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.5);
+  box-shadow:0 20px 50px -24px rgba(23,58,71,.4),
+             inset 0 1px 0 rgba(255,255,255,.6),
+             inset 0 -20px 40px rgba(255,255,255,.12)}
+/* 玻璃上流动的高光 */
+.slab-shine{position:absolute;top:-60%;left:-40%;width:70%;height:220%;
+  background:linear-gradient(115deg,transparent,rgba(255,255,255,.5),transparent);
+  transform:rotate(8deg);animation:slabShine 7s ease-in-out infinite}
+@keyframes slabShine{
+  0%,100%{left:-40%;opacity:0}
+  50%{left:120%;opacity:.9}
+}
+.gd-title{font-family:var(--font-hand);font-weight:400;font-size:34px;letter-spacing:.1em;
+  color:var(--ink);margin:0;position:relative}
+.gd-poet{font-size:12.5px;letter-spacing:.2em;color:var(--ink-soft);opacity:.72;
+  margin-top:12px;position:relative}
+.gd-body{margin-top:30px;position:relative}
+.gd-body p{font-size:16px;line-height:2.4;color:var(--ink);font-weight:300;letter-spacing:.05em;margin:0}
+.gd-body p.blank{height:1.2em}
+
+/* 音乐 */
+.poem-audio{max-width:500px;margin:44px auto 0;text-align:center}
+.poem-audio .pa-cap{font-size:11.5px;letter-spacing:.2em;color:var(--ink-soft);margin-bottom:16px}
+.poem-audio audio{width:100%;height:40px}
+.poem-audio .pa-note{margin-top:14px;font-size:12.5px;line-height:1.9;color:var(--ink-soft);
+  font-weight:300;text-align:left}
+.poem-noaudio{text-align:center;font-size:12.5px;color:var(--ink-soft);font-weight:300;
+  opacity:.7;margin:36px auto 0}
+
+/* ---- 留言区 ---- */
+.poem-notes{max-width:480px;margin:56px auto 0;text-align:left;
+  border-top:1px solid var(--hair);padding-top:34px}
+.pn-cap{text-align:center;font-size:11.5px;letter-spacing:.2em;color:var(--ink-soft);margin-bottom:22px}
+.pn-form{background:rgba(255,255,255,.32);backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.5);border-radius:14px;padding:16px 16px 14px;
+  box-shadow:0 10px 26px -18px rgba(23,58,71,.35)}
+.pn-name,.pn-body{width:100%;background:rgba(255,255,255,.5);border:1px solid var(--hair);
+  border-radius:8px;font-family:inherit;color:var(--ink);padding:9px 12px;box-sizing:border-box}
+.pn-name{font-size:13px;margin-bottom:8px}
+.pn-body{font-size:14px;line-height:1.8;resize:vertical}
+.pn-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:10px}
+.pn-msg{flex:1;font-size:12px;color:var(--ink-soft)}
+.pn-list{list-style:none;padding:0;margin:26px 0 0;display:flex;flex-direction:column;gap:2px}
+.pn-item{padding:16px 4px;border-bottom:1px solid var(--hair)}
+.pn-text{font-size:14px;line-height:1.85;color:var(--ink);font-weight:300;margin:0;white-space:pre-wrap}
+.pn-meta{display:flex;gap:12px;align-items:baseline;margin-top:8px}
+.pn-who{font-size:12px;letter-spacing:.12em;color:var(--seal);opacity:.85}
+.pn-when{font-size:11px;color:var(--ink-soft);opacity:.6}
+.pn-empty{text-align:center;font-size:12.5px;color:var(--ink-soft);opacity:.65;
+  font-weight:300;margin:26px 0 0}
+
+.glass-back{text-align:center;margin-top:50px;font-size:12.5px;position:relative;z-index:1}
+
+/* ---- 多图上传 ---- */
+.mi-grid{display:flex;flex-wrap:wrap;gap:10px}
+.mi-thumb{position:relative;width:76px;height:76px;border-radius:8px;overflow:hidden;
+  border:1px solid var(--hair)}
+.mi-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.mi-del{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;
+  border:none;background:rgba(23,58,71,.72);color:#fff;font-size:13px;line-height:1;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.mi-del:hover{background:rgba(23,58,71,.92)}
+.mi-add{width:76px;height:76px;border-radius:8px;border:1px dashed var(--hair);
+  background:rgba(93,154,143,.08);color:var(--ink-soft);font-size:12.5px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-family:inherit}
+.mi-add:hover{background:rgba(93,154,143,.14)}
+.mi-hint{font-size:11.5px;color:var(--ink-soft);margin-top:8px;font-weight:300}
+.mi-msg{color:var(--seal)}
+
+/* ---- 详情页图片轮播 ---- */
+.poem-gallery{max-width:520px;margin:38px auto 0}
+.pg-stage{position:relative;width:100%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;
+  background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.5);
+  box-shadow:0 18px 44px -22px rgba(23,58,71,.42)}
+.pg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity 1.8s ease-in-out}
+.pg-img.on{opacity:1}
+.pg-dots{display:flex;justify-content:center;gap:8px;margin-top:14px}
+.pg-dot{width:7px;height:7px;border-radius:50%;border:none;padding:0;cursor:pointer;
+  background:var(--hair);transition:background .3s,transform .3s}
+.pg-dot.on{background:var(--seaglass);transform:scale(1.3)}
+
+/* ---- 方案B：居中叙事 ---- */
+.gd-cover{margin-top:26px;border-radius:16px;overflow:hidden;max-width:500px;margin-left:auto;margin-right:auto}
+.gd-cover .poem-gallery{margin:0}
+.gd-title{font-family:var(--font-hand);font-weight:400;font-size:clamp(30px,5vw,42px);
+  letter-spacing:.1em;color:var(--ink);margin:30px 0 0}
+.gd-poet{font-size:12.5px;letter-spacing:.2em;color:var(--ink-soft);opacity:.75;margin-top:12px}
+/* 正文 */
+.gd-body{margin:34px auto 0}
+.gd-body.as-poem{max-width:500px;text-align:center}
+.gd-body.as-story{max-width:600px;text-align:left}
+.gd-body p{color:var(--ink);font-weight:300;margin:0}
+.gd-body.as-poem p{font-size:16px;line-height:2.4;letter-spacing:.05em}
+.gd-body.as-story p{font-size:15.5px;line-height:2.1;letter-spacing:.02em;margin-bottom:2px}
+.gd-body p.blank{height:1em}
+
+/* ---- 玻璃海潮播放器 ---- */
+.glass-tide{display:flex;align-items:center;gap:14px;max-width:460px;margin:0 auto;
+  padding:12px 16px;border-radius:14px;
+  background:rgba(255,255,255,.32);backdrop-filter:blur(4px);
+  border:1px solid rgba(255,255,255,.5);
+  box-shadow:0 10px 26px -18px rgba(23,58,71,.35)}
+.gt-play{width:38px;height:38px;flex:0 0 auto;border:none;background:none;cursor:pointer;
+  padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;
+  transition:background .2s}
+.gt-play:hover{background:rgba(93,154,143,.12)}
+.gt-play svg{width:24px;height:24px;fill:currentColor}
+.gt-wave{flex:1;height:40px;cursor:pointer;display:block}
+.gt-time{flex:0 0 auto;font-size:11.5px;letter-spacing:.06em;color:var(--ink-soft);
+  font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
