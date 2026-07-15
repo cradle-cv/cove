@@ -20,9 +20,6 @@ function toEmbed(url) {
       const id = u.pathname.slice(1);
       if (id) return `https://www.youtube.com/embed/${id}?autoplay=1`;
     }
-    if (host === 'open.spotify.com') {
-      return `https://open.spotify.com/embed${u.pathname}`;
-    }
     if (host === 'soundcloud.com') {
       return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&auto_play=true`;
     }
@@ -34,7 +31,7 @@ function toEmbed(url) {
         const m = url.match(/[?&#/]id=(\d+)/) || url.match(/song\/(\d+)/);
         if (m) id = m[1];
       }
-      if (id) return { netease: `https://music.163.com/outchain/player?type=2&id=${id}&auto=0&height=66` };
+      if (id) return { netease: `https://music.163.com/outchain/player?type=2&id=${id}&auto=1&height=66` };
     }
   } catch (e) {}
   return null;
@@ -66,7 +63,7 @@ export default function ExternalPlayer({ track, onClose }) {
   const cur = items[active];
 
   return (
-    <div className="ext-overlay" onClick={onClose}>
+    <div className="ext-overlay">
       <div className="ext-window" onClick={(e) => e.stopPropagation()}>
         <button className="ext-close" onClick={onClose} aria-label="关闭">×</button>
 
