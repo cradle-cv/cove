@@ -203,7 +203,12 @@ export default function RecordShopClient({ issue }) {
                   <div className="cn">{tr.cn?.split('').join(' ')}</div>
                 </div>
                 <div className="ometa">
-                  <div className="who">{tr.artist}{tr.place ? ` · ${tr.place.split(' · ')[0]}` : ''}</div>
+                  <div className="who">{tr.artist}</div>
+                  {extTrack && extTrack.id === tr.id ? (
+                    <div className="orow-ext">
+                      <ExternalPlayer track={tr} onClose={() => setExtTrack(null)} />
+                    </div>
+                  ) : null}
                   <button
                     className="oplay"
                     aria-label="播放"
