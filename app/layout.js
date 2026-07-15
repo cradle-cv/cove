@@ -1,6 +1,8 @@
 import './globals.css';
 import Link from 'next/link';
 import AvatarMenu from '@/components/AvatarMenu';
+import { LanguageProvider } from '@/components/i18n/LanguageContext';
+import LangToggle from '@/components/i18n/LangToggle';
 
 export const metadata = {
   title: '海角 Cove',
@@ -31,7 +33,7 @@ const NAV = [
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="zh-Hans">
+    <html lang="zh-Hans" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -39,12 +41,21 @@ export default function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var l=localStorage.getItem('cove_lang');if(!l){var n=(navigator.language||'').toLowerCase();l=(n.indexOf('tw')>-1||n.indexOf('hk')>-1||n.indexOf('hant')>-1)?'t':'s';}document.documentElement.lang=l==='t'?'zh-Hant':'zh-Hans';document.documentElement.setAttribute('data-lang',l);}catch(e){}})();`,
+          }}
+        />
       </head>
       <body>
+        <LanguageProvider>
         <div className="cove-bg" />
 
         <header className="band">
-          <AvatarMenu />
+          <div className="band-left">
+            <AvatarMenu />
+            <LangToggle />
+          </div>
           <nav className="band-nav">
             {NAV.filter((n) => n.href !== '/login').map((n) => (
               <Link key={n.href} href={n.href}>{n.label}</Link>
@@ -64,6 +75,7 @@ export default function RootLayout({ children }) {
         </header>
 
         {children}
+        </LanguageProvider>
       </body>
     </html>
   );
