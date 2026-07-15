@@ -893,42 +893,41 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 html[data-lang="t"]:not([data-tc-ready]) body{opacity:0}
 html body{transition:opacity .2s}
 
-/* ---- 外链播放小窗 ---- */
-.ext-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
-  background:rgba(14,42,52,.5);backdrop-filter:blur(6px);padding:24px;
-  animation:extFade .25s ease}
-@keyframes extFade{from{opacity:0}to{opacity:1}}
-.ext-window{position:relative;width:100%;max-width:480px;border-radius:20px;padding:34px 30px 30px;
-  background:rgba(233,240,236,.92);backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.6);
-  box-shadow:0 30px 70px -30px rgba(14,42,52,.6),inset 0 1px 0 rgba(255,255,255,.7);
-  text-align:center;animation:extPop .3s cubic-bezier(.22,.61,.36,1)}
-@keyframes extPop{from{transform:translateY(16px) scale(.97);opacity:0}to{transform:none;opacity:1}}
-.ext-close{position:absolute;top:14px;right:16px;width:28px;height:28px;border:none;border-radius:50%;
-  background:rgba(23,58,71,.1);color:var(--ink);font-size:18px;line-height:1;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:background .2s}
+/* ---- 外链播放浮窗（盖在中央封面方块上）---- */
+.ext-overlay{position:fixed;left:50%;top:clamp(120px,26vh,240px);transform:translateX(-50%);
+  z-index:200;animation:extPop .34s cubic-bezier(.22,.61,.36,1)}
+@keyframes extPop{from{transform:translateX(-50%) scale(.94);opacity:0}
+  to{transform:translateX(-50%) scale(1);opacity:1}}
+.ext-window{position:relative;width:clamp(260px,30vw,340px);border-radius:20px;padding:16px 16px 14px;
+  background:rgba(233,240,236,.95);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.7);
+  box-shadow:0 28px 64px -24px rgba(14,42,52,.6),inset 0 1px 0 rgba(255,255,255,.75);
+  text-align:center}
+.ext-close{position:absolute;top:9px;right:11px;width:24px;height:24px;border:none;border-radius:50%;
+  background:rgba(23,58,71,.1);color:var(--ink);font-size:16px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2}
 .ext-close:hover{background:rgba(23,58,71,.2)}
-.ext-title{font-family:var(--font-hand);font-size:26px;letter-spacing:.08em;color:var(--ink)}
-.ext-sub{font-size:12px;letter-spacing:.16em;color:var(--ink-soft);margin-top:8px}
-.ext-embed{margin-top:22px;border-radius:12px;overflow:hidden;aspect-ratio:16/9;background:#000}
-.ext-embed iframe{width:100%;height:100%;border:0;display:block}
-/* Spotify 播放器是横条，比例不同 */
-.ext-jump{margin-top:26px}
-.ext-note{font-size:14px;line-height:1.9;color:var(--ink);font-weight:300}
-.ext-go{display:inline-block;margin-top:20px;padding:11px 26px;border-radius:22px;
-  background:var(--band);color:#F6EFE0;font-size:14px;letter-spacing:.08em;text-decoration:none;
+.ext-title{font-family:var(--font-hand);font-size:19px;letter-spacing:.05em;color:var(--ink);
+  padding-right:22px;text-align:left}
+.ext-sub{font-size:11px;letter-spacing:.14em;color:var(--ink-soft);margin-top:3px;text-align:left}
+.ext-embed{margin-top:12px;border-radius:10px;overflow:hidden;background:#f2f2f2}
+.ext-embed iframe{width:100%;border:0;display:block}
+.ext-jump{margin-top:14px}
+.ext-note{font-size:12px;line-height:1.7;color:var(--ink);font-weight:300}
+.ext-go{display:inline-block;margin-top:12px;padding:9px 22px;border-radius:20px;
+  background:var(--band);color:#F6EFE0;font-size:13px;letter-spacing:.06em;text-decoration:none;
   transition:background .2s}
 .ext-go:hover{background:var(--band-deep)}
-.ext-hint{font-size:11.5px;color:var(--ink-soft);opacity:.7;margin-top:18px;font-weight:300}
+.ext-hint{font-size:10.5px;color:var(--ink-soft);opacity:.7;margin-top:10px;font-weight:300}
 
 /* 外链小窗 · 多平台切换标签 */
-.ext-tabs{display:flex;gap:8px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.ext-tabs{display:flex;gap:6px;justify-content:flex-start;margin-top:12px;flex-wrap:wrap}
 .ext-tab{padding:6px 16px;border-radius:16px;border:1px solid var(--hair);background:transparent;
   color:var(--ink-soft);font-size:12.5px;cursor:pointer;font-family:inherit;transition:all .2s}
 .ext-tab.on{background:var(--band);color:#F6EFE0;border-color:var(--band)}
 /* Spotify 嵌入是横条，高度矮 */
-.ext-embed.spotify{aspect-ratio:auto;height:152px}
+.ext-embed.spotify{aspect-ratio:auto;height:80px}
 
 /* 外链小窗 · 网易云嵌入 */
-.ext-netease{margin-top:22px}
-.ext-netease iframe{width:100%;border-radius:8px;display:block}
+.ext-netease{margin-top:12px}
+.ext-netease iframe{width:100%;height:86px;border-radius:8px;display:block}
