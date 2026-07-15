@@ -33,7 +33,7 @@ export function beatToLine(b) {
 }
 
 const EMPTY = {
-  title: '', title_en: '', place: '', seal: '', lead_instrument: '', duration: 200, src_text: '', lyrics_text: '', waveform: null, external_url: '', external_platform: '',
+  title: '', title_en: '', place: '', seal: '', lead_instrument: '', duration: 200, src_text: '', lyrics_text: '', waveform: null, external_links: [],
   musician_id: '', art: '', sea: '', cover_url: '', status: 'draft',
 };
 
@@ -60,8 +60,9 @@ export default function AdminTracksPage() {
       ...t,
       // src 是 jsonb 数组 → 文本框用多行字符串
       src_text: Array.isArray(t.src) ? t.src.join('\n') : (typeof t.src === 'string' ? t.src : ''),
-      external_url: t.external_url || '',
-      external_platform: t.external_platform || '',
+      external_links: Array.isArray(t.external_links) && t.external_links.length
+        ? t.external_links
+        : (t.external_url ? [{ platform: t.external_platform || '', url: t.external_url }] : []),
       lyrics_text: Array.isArray(t.lyrics)
         ? t.lyrics.map((x) => (typeof x === 'string' ? x : x.l)).join('\n')
         : '',
@@ -92,8 +93,10 @@ export default function AdminTracksPage() {
       musician_id: editing.musician_id || null,
       art: editing.art || null, sea: editing.sea || null,
       cover_url: editing.cover_url || null, status: editing.status,
-      external_url: editing.external_url?.trim() || null,
-      external_platform: editing.external_platform?.trim() || null,
+      external_links: (editing.external_links || [])
+        .filter((l) => l && l.url && l.url.trim())
+        .map((l) => ({ platform: (l.platform || '').trim(), url: l.url.trim() })),
+      external_url: null, external_platform: null,
     };
     let trackId = editing.id;
     if (trackId) {
@@ -159,21 +162,48 @@ export default function AdminTracksPage() {
 
         <div style={{ margin: '18px 0 6px', paddingTop: 16, borderTop: '1px solid var(--hair)' }}>
           <div style={{ fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.7 }}>
-            名曲解读用外链：不上传音频，只填下面两项 + 时长。点播放会弹小窗去正版平台，字幕按时长照常涨潮。
+            名曲解读用外链：不上传音频，填下面的平台链接 + 时长。可加多个平台（如 Spotify 站内嵌入播放给海外读者、网易云跳转给大陆读者）。点播放会弹小窗，字幕按时长照常涨潮。
           </div>
         </div>
-        <label>外链平台（网易云 / QQ音乐 / YouTube / Spotify…）</label>
-        <input
-          value={editing.external_platform || ''}
-          onChange={(e) => setEditing({ ...editing, external_platform: e.target.value })}
-          placeholder="网易云音乐"
-        />
-        <label>外链地址（平台「分享」按钮复制的官方链接）</label>
-        <input
-          value={editing.external_url || ''}
-          onChange={(e) => setEditing({ ...editing, external_url: e.target.value })}
-          placeholder="https://music.163.com/song?id=…"
-        />
+        <label>外链平台（可加多个）</label>
+        {(editing.external_links || []).map((lnk, idx) => (
+          <div key={idx} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
+            <input
+              style={{ flex: '0 0 130px' }}
+              value={lnk.platform || ''}
+              placeholder="网易云 / Spotify"
+              onChange={(e) => {
+                const next = [...editing.external_links];
+                next[idx] = { ...next[idx], platform: e.target.value };
+                setEditing({ ...editing, external_links: next });
+              }}
+            />
+            <input
+              style={{ flex: 1 }}
+              value={lnk.url || ''}
+              placeholder="平台「分享」按钮复制的官方链接"
+              onChange={(e) => {
+                const next = [...editing.external_links];
+                next[idx] = { ...next[idx], url: e.target.value };
+                setEditing({ ...editing, external_links: next });
+              }}
+            />
+            <button
+              type="button"
+              className="btn ghost small"
+              onClick={() => setEditing({ ...editing, external_links: editing.external_links.filter((_, i) => i !== idx) })}
+            >
+              删
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          className="btn ghost small"
+          onClick={() => setEditing({ ...editing, external_links: [...(editing.external_links || []), { platform: '', url: '' }] })}
+        >
+          ＋ 加一个平台
+        </button>
 
         <label>歌词（一行一句；侧栏低调呈现，不与涨潮字幕争重心）</label>
         <textarea
