@@ -26,6 +26,16 @@ function toEmbed(url) {
     if (host === 'soundcloud.com') {
       return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&auto_play=true`;
     }
+    // 网易云音乐：用官方 outchain 播放器嵌入
+    if (host === 'music.163.com') {
+      // 从链接里提取歌曲 id（song?id=xxx 或 #/song?id=xxx 或 outchain/player?...id=xxx）
+      let id = u.searchParams.get('id');
+      if (!id) {
+        const m = url.match(/[?&#/]id=(\d+)/) || url.match(/song\/(\d+)/);
+        if (m) id = m[1];
+      }
+      if (id) return { netease: `https://music.163.com/outchain/player?type=2&id=${id}&auto=0&height=66` };
+    }
   } catch (e) {}
   return null;
 }
@@ -78,7 +88,7 @@ export default function ExternalPlayer({ track, onClose }) {
           </div>
         ) : null}
 
-        {cur.embed ? (
+        {typeof cur.embed === 'string' ? (
           <div className={'ext-embed' + (cur.url.includes('spotify') ? ' spotify' : '')}>
             <iframe
               src={cur.embed}
@@ -87,6 +97,19 @@ export default function ExternalPlayer({ track, onClose }) {
               loading="eager"
               title={track.cn || track.title}
             />
+          </div>
+        ) : cur.embed && cur.embed.netease ? (
+          <div className="ext-netease">
+            <iframe
+              src={cur.embed.netease}
+              frameBorder="no"
+              marginWidth="0"
+              marginHeight="0"
+              width="100%"
+              height="86"
+              title={track.cn || track.title}
+            />
+            <p className="ext-hint">网易云的官方播放器 · 点上面的三角开始听</p>
           </div>
         ) : (
           <div className="ext-jump">
