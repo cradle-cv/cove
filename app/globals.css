@@ -893,19 +893,20 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 html[data-lang="t"]:not([data-tc-ready]) body{opacity:0}
 html body{transition:opacity .2s}
 
-/* ---- 外链播放器（覆盖在封面方块内，严丝合缝）---- */
-.cover .ext-overlay{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:14px;border-radius:20px;
-  background:rgba(233,240,236,.94);backdrop-filter:blur(14px);
+/* ---- 外链播放器（字幕上方，低调内嵌，不抢中间封面）---- */
+.col-right .ext-overlay{position:relative;margin-bottom:18px;max-width:360px;
   animation:extFade .3s ease}
-@keyframes extFade{from{opacity:0}to{opacity:1}}
-.cover .ext-window{position:relative;width:100%}
-.ext-close{position:absolute;top:-6px;right:-6px;width:24px;height:24px;border:none;border-radius:50%;
-  background:rgba(14,42,52,.85);color:#F6EFE0;font-size:14px;line-height:1;cursor:pointer;
+@keyframes extFade{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.col-right .ext-window{position:relative;border-radius:12px;padding:12px 12px 10px;
+  background:rgba(255,255,255,.42);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.55);
+  box-shadow:0 12px 30px -18px rgba(23,58,71,.4)}
+.ext-close{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border:none;border-radius:50%;
+  background:rgba(14,42,52,.8);color:#F6EFE0;font-size:13px;line-height:1;cursor:pointer;
   display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:3}
 .ext-close:hover{background:var(--band-deep)}
-.ext-tabs{display:flex;gap:6px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
-.ext-tab{padding:4px 12px;border-radius:14px;border:1px solid var(--hair);background:rgba(255,255,255,.5);
+.ext-tabs{display:flex;gap:6px;margin-bottom:10px}
+.ext-tab{padding:4px 12px;border-radius:13px;border:1px solid var(--hair);background:rgba(255,255,255,.4);
   color:var(--ink-soft);font-family:var(--font-utility);font-size:10.5px;letter-spacing:.08em;
   cursor:pointer;transition:all .2s}
 .ext-tab.on{background:var(--band);color:#F6EFE0;border-color:var(--band)}
@@ -914,9 +915,9 @@ html body{transition:opacity .2s}
 .ext-embed.spotify{height:80px}
 .ext-embed:not(.spotify){aspect-ratio:16/9}
 .ext-netease iframe{width:100%;height:86px;border-radius:6px;display:block}
-.ext-jump{text-align:center;padding:4px}
+.ext-jump{text-align:left;padding:2px}
 .ext-note{font-size:11.5px;line-height:1.7;color:var(--ink);font-weight:300}
-.ext-go{display:inline-block;margin-top:10px;padding:8px 18px;border-radius:18px;
-  background:var(--band);color:#F6EFE0;font-size:12px;letter-spacing:.06em;text-decoration:none;
+.ext-go{display:inline-block;margin-top:10px;padding:7px 16px;border-radius:16px;
+  background:var(--band);color:#F6EFE0;font-size:11.5px;letter-spacing:.06em;text-decoration:none;
   transition:background .2s;font-family:var(--font-utility)}
 .ext-go:hover{background:var(--band-deep)}
