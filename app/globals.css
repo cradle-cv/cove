@@ -908,10 +908,13 @@ html body{transition:opacity .2s}
   color:var(--ink-soft);text-decoration:none;transition:color .2s}
 .ext-other-link:hover{color:var(--seal)}
 
-/* 本期总览里的外链小窗：在行下方展开一条 */
+/* 本期总览里的外链小窗：覆盖在这一行的中间，垂直居中 */
 .orow-wrap{position:relative}
-.orow-ext{padding:0 8px 20px 8px;display:flex;justify-content:center;
-  animation:orowExpand .35s cubic-bezier(.22,.61,.36,1)}
-@keyframes orowExpand{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
-.orow-ext .ext-strip{position:static;width:min(440px,90%)}
-.orow-ext .ext-close{top:-8px;right:-8px}
+.orow-ext{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  z-index:15;display:flex;justify-content:center;
+  animation:orowExpand .3s cubic-bezier(.22,.61,.36,1)}
+@keyframes orowExpand{from{opacity:0;transform:translate(-50%,-46%)}to{opacity:1;transform:translate(-50%,-50%)}}
+.orow-ext .ext-strip{position:static;width:min(440px,80vw)}
+.orow-ext .ext-close{top:-9px;right:-9px}
+/* 播放器出现时，这一行的内容淡下去，避免视觉打架 */
+.orow-wrap:has(.orow-ext) .oinfo{opacity:.25;transition:opacity .3s}
