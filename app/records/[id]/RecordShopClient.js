@@ -11,6 +11,8 @@ import Lyrics from '@/components/Lyrics';
 import Echoes from '@/components/Echoes';
 import Waveform from '@/components/Waveform';
 import { activeBeatIndex } from '@/lib/beats';
+import { useSeaSound } from '@/lib/useSeaSound';
+import ExternalPlayer from './ExternalPlayer';
 
 const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV'];
 const roman = (n) => ROMAN[n - 1] || String(n);
@@ -19,33 +21,63 @@ const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(
 
 const IconPlay = () => <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>;
 const IconPause = () => <svg viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z" /></svg>;
+const IconWave = ({ on }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+    <path d="M2 12q3-3 5.5 0T13 12t5.5 0T22 12" />
+    {on ? <path d="M2 17q3-3 5.5 0T13 17t5.5 0T22 17" opacity=".55" /> : null}
+    {on ? <path d="M4 7q2.5-2.4 4.5 0T13 7t4.5 0T20 7" opacity=".3" /> : null}
+  </svg>
+);
 
 export default function RecordShopClient({ issue }) {
   const tracks = issue.tracks;
   const player = useSeacovePlayer(tracks, { volume: 0.55 });
   const [mode, setMode] = useState('immersive'); // immersive | overview
-  // 涨潮字幕当前段：潮水漫过时自动推进；点浮标则锁到那一段，直到潮水再次越过它
-  const [picked, setPicked] = useState({ track: -1, beat: -1, at: -1 });
+  // 涨潮字幕当前段：默认随潮水推进；鼠标移到浮标上时，临时浮起那一段
+  const [hoverBeat, setHoverBeat] = useState(-1);
+  const [extTrack, setExtTrack] = useState(null); // 正在外链播放的曲目（弹窗）
+
+  // 统一的"播放某首"：有站内音频→正常播；只有外链→弹窗 + 让字幕按时长涨潮
+  const playTrack = (i) => {
+    const tk = tracks[i];
+    const hasSrc = Array.isArray(tk?.src) && tk.src.length > 0;
+    if (!hasSrc && tk?.external_url) {
+      if (i !== player.active) player.select(i);
+      player.play(i);            // 无 src 时内核按 duration 走计时，字幕照常涨潮
+      setExtTrack(tk);           // 弹出外链小窗
+      return;
+    }
+    player.play(i);
+  };
+  const toggleTrack = () => {
+    const tk = tracks[player.active];
+    const hasSrc = Array.isArray(tk?.src) && tk.src.length > 0;
+    if (!hasSrc && tk?.external_url) {
+      player.toggle();
+      if (!player.playing) setExtTrack(tk);
+      return;
+    }
+    player.toggle();
+  };
+
+  // 海声：只在没有音频的曲目上响。真音频进来了，海自己退场。
+  const cur = tracks[player.active];
+  const sea = useSeaSound(cur, {
+    hasAudio: Array.isArray(cur?.src) && cur.src.length > 0,
+    volume: 0.42,
+  });
   const reelRef = useRef(null);
   const screenRefs = useRef([]);
 
-  // 当前段：默认随潮水推进；点了浮标就锁在那一段，
-  // 直到潮水漫过它之后的下一个浮标，主动权重新交还给歌。
+  // 当前段：鼠标悬在某个浮标上就显示那一段，否则跟着歌走。
+  // 悬停只是探头看一眼，歌照常唱，进度不动。
   const beatIndexFor = useCallback((i) => {
     const beats = tracks[i]?.beats || [];
     if (!beats.length) return -1;
+    if (i === player.active && hoverBeat >= 0) return hoverBeat;
     const prog = i === player.active ? player.progress : 0;
-    const auto = prog > 0.001 ? activeBeatIndex(beats, prog) : -1;
-    if (picked.track === i && picked.beat >= 0) {
-      const passed = auto > picked.beat;
-      if (!passed) return picked.beat;
-    }
-    return auto;
-  }, [tracks, player.active, player.progress, picked]);
-
-  const pickBeat = useCallback((i, b) => {
-    setPicked({ track: i, beat: b, at: Date.now() });
-  }, []);
+    return prog > 0.001 ? activeBeatIndex(beats, prog) : -1;
+  }, [tracks, player.active, player.progress, hoverBeat]);
 
   // 滚动切屏：命中新屏则 select（自动停旧曲）
   useEffect(() => {
@@ -100,7 +132,7 @@ export default function RecordShopClient({ issue }) {
                   <div className="col-center">
                     <div
                       className={'cover' + (player.playing && i === player.active ? ' playing live' : '')}
-                      onClick={() => (i === player.active ? player.toggle() : (goto(i), player.play(i)))}
+                      onClick={() => (i === player.active ? toggleTrack() : (goto(i), playTrack(i)))}
                     >
                       <div className="art" style={tr.cover_url
                         ? { backgroundImage: `url(${tr.cover_url})` }
@@ -125,7 +157,8 @@ export default function RecordShopClient({ issue }) {
                       beats={tr.beats}
                       index={beatIndexFor(i)}
                       lead={`第 ${CNNUM[i]} 首 · ${issue.theme_zh}`}
-                      hint="海面上浮着几个点。等潮水漫过去，或者伸手点开它们。"
+                      peeking={i === player.active && hoverBeat >= 0}
+                      hint="海面上浮着几个点。等潮水漫过去，或者把手停在上面。"
                     />
                   </div>
                 </div>
@@ -169,7 +202,7 @@ export default function RecordShopClient({ issue }) {
                   <button
                     className="oplay"
                     aria-label="播放"
-                    onClick={(e) => { e.stopPropagation(); player.play(i); }}
+                    onClick={(e) => { e.stopPropagation(); playTrack(i); }}
                   >
                     {player.playing && i === player.active ? <IconPause /> : <IconPlay />}
                   </button>
@@ -191,13 +224,24 @@ export default function RecordShopClient({ issue }) {
             beats={t?.beats || []}
             activeBeat={beatIndexFor(player.active)}
             onSeek={(r) => player.seek(r)}
-            onPickBeat={(b) => pickBeat(player.active, b)}
+            onHoverBeat={setHoverBeat}
           />
         </div>
         <div className="dockrow">
-          <button className="pbtn" onClick={player.toggle} aria-label="播放">
+          <button className="pbtn" onClick={toggleTrack} aria-label="播放">
             {player.playing ? <IconPause /> : <IconPlay />}
           </button>
+          {sea.available ? (
+            <button
+              className={'seabtn' + (sea.on ? ' on' : '')}
+              onClick={sea.toggle}
+              title={sea.on ? '收起这片海' : '听听这片海'}
+              aria-label={sea.on ? '收起海声' : '播放海声'}
+              aria-pressed={sea.on}
+            >
+              <IconWave on={sea.on} />
+            </button>
+          ) : null}
           <div className="dmeta">
             <div className="t">{t?.cn}</div>
             <div className="s">{t?.artist} — 海角第{roman(issue.issue_number)}期</div>
@@ -205,6 +249,8 @@ export default function RecordShopClient({ issue }) {
           <div className="dtime">{fmt(player.currentTime)} / {fmt(player.duration)}</div>
         </div>
       </div>
+
+      {extTrack ? <ExternalPlayer track={extTrack} onClose={() => setExtTrack(null)} /> : null}
     </>
   );
 }
