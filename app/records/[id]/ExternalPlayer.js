@@ -67,10 +67,7 @@ export default function ExternalPlayer({ track, onClose }) {
       <div className="ext-window" onClick={(e) => e.stopPropagation()}>
         <button className="ext-close" onClick={onClose} aria-label="关闭">×</button>
 
-        <div className="ext-title">{track.cn || track.title}</div>
-        <div className="ext-sub">{track.artist || track.en}</div>
-
-        {/* 多平台切换标签（多于一个才显示） */}
+        {/* 多平台切换（多于一个才显示） */}
         {items.length > 1 ? (
           <div className="ext-tabs">
             {items.map((it, i) => (
@@ -106,13 +103,11 @@ export default function ExternalPlayer({ track, onClose }) {
               height="86"
               title={track.cn || track.title}
             />
-            <p className="ext-hint">网易云的官方播放器 · 点上面的三角开始听</p>
           </div>
         ) : (
           <div className="ext-jump">
             <p className="ext-note">
-              这首歌收在{cur.platform}。<br />
-              点开在{cur.platform}听，海角会留在这里等你回来。
+              在{cur.platform}听完整版。<br />海角会留在这里等你回来。
             </p>
             <a className="ext-go" href={cur.url} target="_blank" rel="noopener noreferrer">
               去{cur.platform}听 →
