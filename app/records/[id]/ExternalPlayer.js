@@ -1,49 +1,59 @@
 'use client';
-// 外链小窗 · 站内浮层
-// 名曲没有站内音频，点击时弹出这个小窗。
-//   能官方嵌入的平台（YouTube / Spotify / SoundCloud / Bandcamp）→ 直接嵌播放器，站内真播
-//   国内平台（网易云 / QQ音乐）→ 放封面+一个「去平台听」按钮，新标签打开
+// 外链小窗 · 站内浮层（支持一首歌配多个平台）
+// 能官方嵌入的平台（YouTube / Spotify / SoundCloud）→ 站内直接播（默认展开第一个可嵌入的）
+// 国内平台（网易云 / QQ音乐）→ 一个「去平台听」按钮，新标签打开
+// 一首歌可同时有 Spotify 嵌入 + 网易云跳转，境内外读者各取所需。
 // 无论哪种，外面的字幕都照常按预估时长涨潮。
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-// 把常见平台链接转成可嵌入的 embed 地址；不支持嵌入的返回 null
+// 把链接转成可嵌入地址；不支持嵌入的返回 null
 function toEmbed(url) {
   if (!url) return null;
   try {
     const u = new URL(url);
     const host = u.hostname.replace(/^www\./, '');
-    // YouTube
     if (host === 'youtube.com' || host === 'm.youtube.com') {
       const v = u.searchParams.get('v');
-      if (v) return { type: 'iframe', src: `https://www.youtube.com/embed/${v}?autoplay=1` };
+      if (v) return `https://www.youtube.com/embed/${v}?autoplay=1`;
     }
     if (host === 'youtu.be') {
       const id = u.pathname.slice(1);
-      if (id) return { type: 'iframe', src: `https://www.youtube.com/embed/${id}?autoplay=1` };
+      if (id) return `https://www.youtube.com/embed/${id}?autoplay=1`;
     }
-    // Spotify
     if (host === 'open.spotify.com') {
-      return { type: 'iframe', src: `https://open.spotify.com/embed${u.pathname}` };
+      return `https://open.spotify.com/embed${u.pathname}`;
     }
-    // SoundCloud
     if (host === 'soundcloud.com') {
-      return { type: 'iframe', src: `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&auto_play=true` };
+      return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&auto_play=true`;
     }
-    // Bandcamp（EmbeddedPlayer 需要专辑/曲目 id，无法从普通链接直接推导，走跳转）
   } catch (e) {}
   return null;
 }
 
+// 兼容旧的单字段：把 track 上的外链整理成统一的 links 数组
+function collectLinks(track) {
+  const arr = Array.isArray(track.external_links) ? track.external_links.filter((l) => l && l.url) : [];
+  if (arr.length) return arr;
+  if (track.external_url) return [{ platform: track.external_platform || '原平台', url: track.external_url }];
+  return [];
+}
+
 export default function ExternalPlayer({ track, onClose }) {
+  const links = collectLinks(track);
+  // 每条链接算出是否可嵌入
+  const items = links.map((l) => ({ ...l, embed: toEmbed(l.url) }));
+  // 默认选中第一个「可嵌入」的；没有可嵌入的就选第一个
+  const firstEmbeddable = items.findIndex((it) => it.embed);
+  const [active, setActive] = useState(firstEmbeddable >= 0 ? firstEmbeddable : 0);
+
   useEffect(() => {
     const onEsc = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onEsc);
     return () => window.removeEventListener('keydown', onEsc);
   }, [onClose]);
 
-  if (!track) return null;
-  const embed = toEmbed(track.external_url);
-  const platform = track.external_platform || '原平台';
+  if (!track || items.length === 0) return null;
+  const cur = items[active];
 
   return (
     <div className="ext-overlay" onClick={onClose}>
@@ -53,10 +63,25 @@ export default function ExternalPlayer({ track, onClose }) {
         <div className="ext-title">{track.cn || track.title}</div>
         <div className="ext-sub">{track.artist || track.en}</div>
 
-        {embed ? (
-          <div className="ext-embed">
+        {/* 多平台切换标签（多于一个才显示） */}
+        {items.length > 1 ? (
+          <div className="ext-tabs">
+            {items.map((it, i) => (
+              <button
+                key={i}
+                className={'ext-tab' + (i === active ? ' on' : '')}
+                onClick={() => setActive(i)}
+              >
+                {it.platform}
+              </button>
+            ))}
+          </div>
+        ) : null}
+
+        {cur.embed ? (
+          <div className={'ext-embed' + (cur.url.includes('spotify') ? ' spotify' : '')}>
             <iframe
-              src={embed.src}
+              src={cur.embed}
               allow="autoplay; encrypted-media"
               allowFullScreen
               loading="eager"
@@ -66,11 +91,11 @@ export default function ExternalPlayer({ track, onClose }) {
         ) : (
           <div className="ext-jump">
             <p className="ext-note">
-              这首歌收在{platform}。<br />
-              点开在{platform}听，海角会留在这里等你回来。
+              这首歌收在{cur.platform}。<br />
+              点开在{cur.platform}听，海角会留在这里等你回来。
             </p>
-            <a className="ext-go" href={track.external_url} target="_blank" rel="noopener noreferrer">
-              去{platform}听 →
+            <a className="ext-go" href={cur.url} target="_blank" rel="noopener noreferrer">
+              去{cur.platform}听 →
             </a>
             <p className="ext-hint">字幕会在这边继续，按歌的长度慢慢浮起来。</p>
           </div>
