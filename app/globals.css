@@ -908,7 +908,10 @@ html body{transition:opacity .2s}
   color:var(--ink-soft);text-decoration:none;transition:color .2s}
 .ext-other-link:hover{color:var(--seal)}
 
-/* 本期总览里的外链小窗：内联在播放按钮左边 */
-.orow-ext .ext-strip{position:static;width:300px;margin-right:14px}
+/* 本期总览里的外链小窗：在行下方展开一条 */
+.orow-wrap{position:relative}
+.orow-ext{padding:0 8px 20px 8px;display:flex;justify-content:center;
+  animation:orowExpand .35s cubic-bezier(.22,.61,.36,1)}
+@keyframes orowExpand{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.orow-ext .ext-strip{position:static;width:min(440px,90%)}
 .orow-ext .ext-close{top:-8px;right:-8px}
-.ometa{display:flex;align-items:center;gap:14px}
