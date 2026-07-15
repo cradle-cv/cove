@@ -880,3 +880,43 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 .gt-wave{flex:1;height:40px;cursor:pointer;display:block}
 .gt-time{flex:0 0 auto;font-size:11.5px;letter-spacing:.06em;color:var(--ink-soft);
   font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+
+/* ---- 简繁切换 ---- */
+.band-left{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.lang-toggle{width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(246,239,224,.5);
+  background:rgba(246,239,224,.06);color:#F6EFE0;font-family:var(--font-hand),serif;
+  font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  padding:0;line-height:1;transition:background .2s,border-color .2s}
+.lang-toggle:hover{background:rgba(246,239,224,.16);border-color:#F6EFE0}
+
+/* 繁体首屏：转换完成前隐藏 body，避免简→繁闪烁（简体用户不受影响） */
+html[data-lang="t"]:not([data-tc-ready]) body{opacity:0}
+html body{transition:opacity .2s}
+
+/* ---- 外链播放小窗 ---- */
+.ext-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
+  background:rgba(14,42,52,.5);backdrop-filter:blur(6px);padding:24px;
+  animation:extFade .25s ease}
+@keyframes extFade{from{opacity:0}to{opacity:1}}
+.ext-window{position:relative;width:100%;max-width:480px;border-radius:20px;padding:34px 30px 30px;
+  background:rgba(233,240,236,.92);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.6);
+  box-shadow:0 30px 70px -30px rgba(14,42,52,.6),inset 0 1px 0 rgba(255,255,255,.7);
+  text-align:center;animation:extPop .3s cubic-bezier(.22,.61,.36,1)}
+@keyframes extPop{from{transform:translateY(16px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.ext-close{position:absolute;top:14px;right:16px;width:28px;height:28px;border:none;border-radius:50%;
+  background:rgba(23,58,71,.1);color:var(--ink);font-size:18px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:background .2s}
+.ext-close:hover{background:rgba(23,58,71,.2)}
+.ext-title{font-family:var(--font-hand);font-size:26px;letter-spacing:.08em;color:var(--ink)}
+.ext-sub{font-size:12px;letter-spacing:.16em;color:var(--ink-soft);margin-top:8px}
+.ext-embed{margin-top:22px;border-radius:12px;overflow:hidden;aspect-ratio:16/9;background:#000}
+.ext-embed iframe{width:100%;height:100%;border:0;display:block}
+/* Spotify 播放器是横条，比例不同 */
+.ext-jump{margin-top:26px}
+.ext-note{font-size:14px;line-height:1.9;color:var(--ink);font-weight:300}
+.ext-go{display:inline-block;margin-top:20px;padding:11px 26px;border-radius:22px;
+  background:var(--band);color:#F6EFE0;font-size:14px;letter-spacing:.08em;text-decoration:none;
+  transition:background .2s}
+.ext-go:hover{background:var(--band-deep)}
+.ext-hint{font-size:11.5px;color:var(--ink-soft);opacity:.7;margin-top:18px;font-weight:300}
