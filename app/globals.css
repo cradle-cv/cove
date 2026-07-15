@@ -790,7 +790,7 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 .gd-body p.blank{height:1.2em}
 
 /* 音乐 */
-.poem-audio{max-width:500px;margin:26px auto 0;text-align:center}
+.poem-audio{max-width:500px;margin:44px auto 0;text-align:center}
 .poem-audio .pa-cap{font-size:11.5px;letter-spacing:.2em;color:var(--ink-soft);margin-bottom:16px}
 .poem-audio audio{width:100%;height:40px}
 .poem-audio .pa-note{margin-top:14px;font-size:12.5px;line-height:1.9;color:var(--ink-soft);
@@ -880,3 +880,15 @@ body{font-family:var(--font-serif);color:var(--ink);background:var(--paper);
 .gt-wave{flex:1;height:40px;cursor:pointer;display:block}
 .gt-time{flex:0 0 auto;font-size:11.5px;letter-spacing:.06em;color:var(--ink-soft);
   font-variant-numeric:tabular-nums;min-width:64px;text-align:right}
+
+/* ---- 简繁切换 ---- */
+.band-left{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.lang-toggle{width:30px;height:30px;border-radius:50%;border:1.5px solid rgba(246,239,224,.5);
+  background:rgba(246,239,224,.06);color:#F6EFE0;font-family:var(--font-hand),serif;
+  font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  padding:0;line-height:1;transition:background .2s,border-color .2s}
+.lang-toggle:hover{background:rgba(246,239,224,.16);border-color:#F6EFE0}
+
+/* 繁体首屏：转换完成前隐藏 body，避免简→繁闪烁（简体用户不受影响） */
+html[data-lang="t"]:not([data-tc-ready]) body{opacity:0}
+html body{transition:opacity .2s}
