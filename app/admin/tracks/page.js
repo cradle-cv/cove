@@ -33,7 +33,7 @@ export function beatToLine(b) {
 }
 
 const EMPTY = {
-  title: '', title_en: '', place: '', seal: '', lead_instrument: '', duration: 200, src_text: '', lyrics_text: '', waveform: null,
+  title: '', title_en: '', place: '', seal: '', lead_instrument: '', duration: 200, src_text: '', lyrics_text: '', waveform: null, external_url: '', external_platform: '',
   musician_id: '', art: '', sea: '', cover_url: '', status: 'draft',
 };
 
@@ -60,6 +60,8 @@ export default function AdminTracksPage() {
       ...t,
       // src 是 jsonb 数组 → 文本框用多行字符串
       src_text: Array.isArray(t.src) ? t.src.join('\n') : (typeof t.src === 'string' ? t.src : ''),
+      external_url: t.external_url || '',
+      external_platform: t.external_platform || '',
       lyrics_text: Array.isArray(t.lyrics)
         ? t.lyrics.map((x) => (typeof x === 'string' ? x : x.l)).join('\n')
         : '',
@@ -90,6 +92,8 @@ export default function AdminTracksPage() {
       musician_id: editing.musician_id || null,
       art: editing.art || null, sea: editing.sea || null,
       cover_url: editing.cover_url || null, status: editing.status,
+      external_url: editing.external_url?.trim() || null,
+      external_platform: editing.external_platform?.trim() || null,
     };
     let trackId = editing.id;
     if (trackId) {
@@ -151,6 +155,24 @@ export default function AdminTracksPage() {
           value={editing.src_text || ''}
           onChange={(e) => setEditing({ ...editing, src_text: e.target.value })}
           placeholder="https://pub-xxxx.r2.dev/covemusic/song.mp3"
+        />
+
+        <div style={{ margin: '18px 0 6px', paddingTop: 16, borderTop: '1px solid var(--hair)' }}>
+          <div style={{ fontSize: 13, color: 'var(--ink-soft)', lineHeight: 1.7 }}>
+            名曲解读用外链：不上传音频，只填下面两项 + 时长。点播放会弹小窗去正版平台，字幕按时长照常涨潮。
+          </div>
+        </div>
+        <label>外链平台（网易云 / QQ音乐 / YouTube / Spotify…）</label>
+        <input
+          value={editing.external_platform || ''}
+          onChange={(e) => setEditing({ ...editing, external_platform: e.target.value })}
+          placeholder="网易云音乐"
+        />
+        <label>外链地址（平台「分享」按钮复制的官方链接）</label>
+        <input
+          value={editing.external_url || ''}
+          onChange={(e) => setEditing({ ...editing, external_url: e.target.value })}
+          placeholder="https://music.163.com/song?id=…"
         />
 
         <label>歌词（一行一句；侧栏低调呈现，不与涨潮字幕争重心）</label>
