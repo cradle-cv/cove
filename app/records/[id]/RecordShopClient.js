@@ -145,9 +145,6 @@ export default function RecordShopClient({ issue }) {
                       <button className="playbtn" aria-label="播放">
                         {player.playing && i === player.active ? <IconPause /> : <IconPlay />}
                       </button>
-                      {extTrack && extTrack.id === tr.id ? (
-                        <ExternalPlayer track={tr} onClose={() => setExtTrack(null)} />
-                      ) : null}
                     </div>
                     <div className="titles">
                       <div className="en">{tr.en}</div>
@@ -158,6 +155,9 @@ export default function RecordShopClient({ issue }) {
 
                   <div className="col-right">
                     <div className="ghost">{i + 1}</div>
+                    {extTrack && extTrack.id === tr.id ? (
+                      <ExternalPlayer track={tr} onClose={() => setExtTrack(null)} />
+                    ) : null}
                     <Narration
                       beats={tr.beats}
                       index={beatIndexFor(i)}
