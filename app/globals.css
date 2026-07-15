@@ -907,3 +907,8 @@ html body{transition:opacity .2s}
 .ext-other-link{font-family:var(--font-utility);font-size:11px;letter-spacing:.08em;
   color:var(--ink-soft);text-decoration:none;transition:color .2s}
 .ext-other-link:hover{color:var(--seal)}
+
+/* 本期总览里的外链小窗：内联在播放按钮左边 */
+.orow-ext .ext-strip{position:static;width:300px;margin-right:14px}
+.orow-ext .ext-close{top:-8px;right:-8px}
+.ometa{display:flex;align-items:center;gap:14px}
