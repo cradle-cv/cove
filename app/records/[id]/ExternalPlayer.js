@@ -63,7 +63,7 @@ export default function ExternalPlayer({ track, onClose }) {
   const cur = items[active];
 
   return (
-    <div className="ext-overlay">
+    <div className="ext-overlay" onClick={(e) => e.stopPropagation()}>
       <div className="ext-window" onClick={(e) => e.stopPropagation()}>
         <button className="ext-close" onClick={onClose} aria-label="关闭">×</button>
 
