@@ -187,8 +187,8 @@ export default function RecordShopClient({ issue }) {
           </div>
           <div>
             {tracks.map((tr, i) => (
+              <div key={tr.id || i} className="orow-wrap">
               <div
-                key={tr.id || i}
                 className={'orow' + (i === player.active ? ' on' : '')}
                 onClick={() => { setMode('immersive'); setTimeout(() => goto(i), 0); }}
               >
@@ -204,11 +204,6 @@ export default function RecordShopClient({ issue }) {
                 </div>
                 <div className="ometa">
                   <div className="who">{tr.artist}</div>
-                  {extTrack && extTrack.id === tr.id ? (
-                    <div className="orow-ext">
-                      <ExternalPlayer track={tr} onClose={() => setExtTrack(null)} />
-                    </div>
-                  ) : null}
                   <button
                     className="oplay"
                     aria-label="播放"
@@ -217,6 +212,12 @@ export default function RecordShopClient({ issue }) {
                     {player.playing && i === player.active ? <IconPause /> : <IconPlay />}
                   </button>
                 </div>
+              </div>
+              {extTrack && extTrack.id === tr.id ? (
+                <div className="orow-ext" onClick={(e) => e.stopPropagation()}>
+                  <ExternalPlayer track={tr} onClose={() => setExtTrack(null)} />
+                </div>
+              ) : null}
               </div>
             ))}
           </div>
