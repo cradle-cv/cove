@@ -928,3 +928,7 @@ html body{transition:opacity .2s}
 .ext-tab.on{background:var(--band);color:#F6EFE0;border-color:var(--band)}
 /* Spotify 嵌入是横条，高度矮 */
 .ext-embed.spotify{aspect-ratio:auto;height:152px}
+
+/* 外链小窗 · 网易云嵌入 */
+.ext-netease{margin-top:22px}
+.ext-netease iframe{width:100%;border-radius:8px;display:block}
