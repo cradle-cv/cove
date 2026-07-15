@@ -41,7 +41,8 @@ export default function RecordShopClient({ issue }) {
   const playTrack = (i) => {
     const tk = tracks[i];
     const hasSrc = Array.isArray(tk?.src) && tk.src.length > 0;
-    if (!hasSrc && tk?.external_url) {
+    const hasExt = (Array.isArray(tk?.external_links) && tk.external_links.length) || tk?.external_url;
+    if (!hasSrc && hasExt) {
       if (i !== player.active) player.select(i);
       player.play(i);            // 无 src 时内核按 duration 走计时，字幕照常涨潮
       setExtTrack(tk);           // 弹出外链小窗
@@ -52,7 +53,8 @@ export default function RecordShopClient({ issue }) {
   const toggleTrack = () => {
     const tk = tracks[player.active];
     const hasSrc = Array.isArray(tk?.src) && tk.src.length > 0;
-    if (!hasSrc && tk?.external_url) {
+    const hasExt = (Array.isArray(tk?.external_links) && tk.external_links.length) || tk?.external_url;
+    if (!hasSrc && hasExt) {
       player.toggle();
       if (!player.playing) setExtTrack(tk);
       return;
