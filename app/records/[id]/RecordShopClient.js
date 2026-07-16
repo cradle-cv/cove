@@ -189,7 +189,7 @@ export default function RecordShopClient({ issue }) {
             {tracks.map((tr, i) => (
               <div key={tr.id || i} className="orow-wrap">
               <div
-                className={'orow' + (i === player.active ? ' on' : '')}
+                className={'orow' + (i === player.active ? ' on' : '') + (extTrack && extTrack.id === tr.id ? ' ext-open' : '')}
                 onClick={() => { setMode('immersive'); setTimeout(() => goto(i), 0); }}
               >
                 <div className="idx">{i + 1}</div>
@@ -202,22 +202,23 @@ export default function RecordShopClient({ issue }) {
                   <div className="en">{tr.en}</div>
                   <div className="cn">{tr.cn?.split('').join(' ')}</div>
                 </div>
-                <div className="ometa">
-                  <div className="who">{tr.artist}</div>
-                  <button
-                    className="oplay"
-                    aria-label="播放"
-                    onClick={(e) => { e.stopPropagation(); playTrack(i); }}
-                  >
-                    {player.playing && i === player.active ? <IconPause /> : <IconPlay />}
-                  </button>
-                </div>
+                {extTrack && extTrack.id === tr.id ? (
+                  <div className="orow-ext" onClick={(e) => e.stopPropagation()}>
+                    <ExternalPlayer track={tr} onClose={() => setExtTrack(null)} />
+                  </div>
+                ) : (
+                  <div className="ometa">
+                    <div className="who">{tr.artist}</div>
+                    <button
+                      className="oplay"
+                      aria-label="播放"
+                      onClick={(e) => { e.stopPropagation(); playTrack(i); }}
+                    >
+                      {player.playing && i === player.active ? <IconPause /> : <IconPlay />}
+                    </button>
+                  </div>
+                )}
               </div>
-              {extTrack && extTrack.id === tr.id ? (
-                <div className="orow-ext" onClick={(e) => e.stopPropagation()}>
-                  <ExternalPlayer track={tr} onClose={() => setExtTrack(null)} />
-                </div>
-              ) : null}
               </div>
             ))}
           </div>
