@@ -934,6 +934,6 @@ html body{transition:opacity .2s}
 .ejc-arrow{font-size:15px;color:var(--seal)}
 
 .narration-block{position:relative;width:100%}
-.cr-ext{position:absolute;left:-5px;bottom:calc(100% + 20px);width:100%;max-width:340px;z-index:2}
+.cr-ext{position:absolute;left:-15px;bottom:calc(100% + 20px);width:100%;max-width:340px;z-index:2}
 .cr-ext .ext-strip{position:relative;width:100%;max-width:340px}
 .cr-ext .ext-netease-frame{width:100%;height:86px}
