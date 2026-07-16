@@ -37,11 +37,12 @@ export default function RecordShopClient({ issue }) {
   const [hoverBeat, setHoverBeat] = useState(-1);
   // 海浪/字幕的独立时间轴，和音乐无关。播放时自己按歌的时长往前走；
   // 回点海浪 = 把这个时间轴跳到那个位置，然后继续往前。音乐不受任何影响。
+  const [extTrack, setExtTrack] = useState(null); // 正在外链播放的曲目（弹窗）
   const [tideProgress, setTideProgress] = useState(0);
   const tideRef = useRef(0);
   useEffect(() => { tideRef.current = tideProgress; }, [tideProgress]);
-  // 切歌时海浪时间轴归零
-  useEffect(() => { tideRef.current = 0; setTideProgress(0); }, [player.active]);
+  // 切歌时海浪时间轴归零，并关掉外链播放器（卸载网易云 iframe，停掉旧歌）
+  useEffect(() => { tideRef.current = 0; setTideProgress(0); setExtTrack(null); }, [player.active]);
   useEffect(() => {
     if (!player.playing) return;
     const dur = (tracks[player.active]?.duration || 200) * 1000;
@@ -57,7 +58,6 @@ export default function RecordShopClient({ issue }) {
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [player.playing, player.active, tracks]);
-  const [extTrack, setExtTrack] = useState(null); // 正在外链播放的曲目（弹窗）
 
   // 统一的"播放某首"：有站内音频→正常播；只有外链→弹窗 + 让字幕按时长涨潮
   const playTrack = (i) => {
