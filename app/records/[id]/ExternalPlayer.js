@@ -2,7 +2,7 @@
 // 外链播放器 · 就是一条扁扁的网易云原生播放器，放在封面左边
 // 网易云 → 官方 outchain 横条播放器（能听全曲）
 // 其他能嵌的（YouTube/Spotify）→ 若网易云不存在才显示；Spotify 只能试听，做成文字跳转
-import { useEffect } from 'react';
+
 
 function neteaseId(url) {
   if (!url) return null;
@@ -22,13 +22,7 @@ function collectLinks(track) {
   return [];
 }
 
-export default function ExternalPlayer({ track, onClose }) {
-  useEffect(() => {
-    const onEsc = (e) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onEsc);
-    return () => window.removeEventListener('keydown', onEsc);
-  }, [onClose]);
-
+export default function ExternalPlayer({ track }) {
   const links = collectLinks(track);
   if (!track || links.length === 0) return null;
 
@@ -39,7 +33,6 @@ export default function ExternalPlayer({ track, onClose }) {
 
   return (
     <div className="ext-strip" onClick={(e) => e.stopPropagation()}>
-      <button className="ext-close" onClick={onClose} aria-label="关闭">×</button>
 
       {netease ? (
         <iframe
