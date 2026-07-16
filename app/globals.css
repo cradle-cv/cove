@@ -918,6 +918,6 @@ html body{transition:opacity .2s}
 .orow-ext .ext-close{top:-8px;right:-8px}
 
 /* 沉浸页外链播放器：在字幕上方 */
-.cr-ext{position:absolute;left:0;bottom:calc(50% + 70px);width:100%;max-width:340px;z-index:2}
+.cr-ext{position:absolute;left:0;bottom:calc(50% + 110px);width:100%;max-width:340px;z-index:2}
 .cr-ext .ext-strip{position:relative;width:100%;max-width:340px}
 .cr-ext .ext-netease-frame{width:100%;height:86px}
