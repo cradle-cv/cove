@@ -35,10 +35,17 @@ export default function RecordShopClient({ issue }) {
   const [mode, setMode] = useState('immersive'); // immersive | overview
   // 涨潮字幕当前段：默认随潮水推进；鼠标移到浮标上时，临时浮起那一段
   const [hoverBeat, setHoverBeat] = useState(-1);
+  const [viewBeat, setViewBeat] = useState(-1); // 手动翻看的字幕段；-1 表示跟随播放
+  useEffect(() => {
+    if (viewBeat < 0) return;
+    const t = setTimeout(() => setViewBeat(-1), 8000); // 翻看 8 秒后回到跟随播放
+    return () => clearTimeout(t);
+  }, [viewBeat]);
   const [extTrack, setExtTrack] = useState(null); // 正在外链播放的曲目（弹窗）
 
   // 统一的"播放某首"：有站内音频→正常播；只有外链→弹窗 + 让字幕按时长涨潮
   const playTrack = (i) => {
+    setViewBeat(-1);
     const tk = tracks[i];
     const hasSrc = Array.isArray(tk?.src) && tk.src.length > 0;
     const hasExt = (Array.isArray(tk?.external_links) && tk.external_links.length) || tk?.external_url;
@@ -77,9 +84,10 @@ export default function RecordShopClient({ issue }) {
     const beats = tracks[i]?.beats || [];
     if (!beats.length) return -1;
     if (i === player.active && hoverBeat >= 0) return hoverBeat;
+    if (i === player.active && viewBeat >= 0) return viewBeat;
     const prog = i === player.active ? player.progress : 0;
     return prog > 0.001 ? activeBeatIndex(beats, prog) : -1;
-  }, [tracks, player.active, player.progress, hoverBeat]);
+  }, [tracks, player.active, player.progress, hoverBeat, viewBeat]);
 
   // 滚动切屏：命中新屏则 select（自动停旧曲）
   useEffect(() => {
@@ -232,10 +240,26 @@ export default function RecordShopClient({ issue }) {
           <Waveform
             peaks={t?.waveform}
             duration={player.duration}
-            progress={player.progress}
+            progress={(() => {
+              // 海浪着色跟随"正在看的字幕段"，不代表音乐进度
+              const b = beatIndexFor(player.active);
+              const bts = t?.beats || [];
+              if (b >= 0 && bts[b]) return Number(bts[b].at);
+              return player.progress;
+            })()}
             beats={t?.beats || []}
             activeBeat={beatIndexFor(player.active)}
-            onSeek={(r) => player.seek(r)}
+            onSeek={(r) => {
+              // 海浪条拖动 = 翻看字幕，不改音乐进度
+              const bts = tracks[player.active]?.beats || [];
+              if (!bts.length) return;
+              // 找到 r 位置对应的字幕段（at 最接近且不超过 r 的那段）
+              let idx = 0;
+              for (let k = 0; k < bts.length; k++) {
+                if (Number(bts[k].at) <= r) idx = k; else break;
+              }
+              setViewBeat(idx);
+            }}
             onHoverBeat={setHoverBeat}
           />
         </div>
