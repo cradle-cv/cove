@@ -37,12 +37,17 @@ export default function RecordShopClient({ issue }) {
   const [hoverBeat, setHoverBeat] = useState(-1);
   // 海浪/字幕的独立时间轴，和音乐无关。播放时自己按歌的时长往前走；
   // 回点海浪 = 把这个时间轴跳到那个位置，然后继续往前。音乐不受任何影响。
-  const [extTrack, setExtTrack] = useState(null); // 正在外链播放的曲目（弹窗）
+  // 判断某首是不是外链歌（无站内音频、有外链）
+  const isExternal = (tk) => {
+    const hasSrc = Array.isArray(tk?.src) && tk.src.length > 0;
+    const hasExt = (Array.isArray(tk?.external_links) && tk.external_links.length) || tk?.external_url;
+    return !hasSrc && hasExt;
+  };
   const [tideProgress, setTideProgress] = useState(0);
   const tideRef = useRef(0);
   useEffect(() => { tideRef.current = tideProgress; }, [tideProgress]);
   // 切歌时海浪时间轴归零，并关掉外链播放器（卸载网易云 iframe，停掉旧歌）
-  useEffect(() => { tideRef.current = 0; setTideProgress(0); setExtTrack(null); }, [player.active]);
+  useEffect(() => { tideRef.current = 0; setTideProgress(0); }, [player.active]);
   useEffect(() => {
     if (!player.playing) return;
     const dur = (tracks[player.active]?.duration || 200) * 1000;
@@ -68,7 +73,6 @@ export default function RecordShopClient({ issue }) {
     if (!hasSrc && hasExt) {
       if (i !== player.active) player.select(i);
       player.play(i);            // 无 src 时内核按 duration 走计时，字幕照常涨潮
-      setExtTrack(tk);           // 弹出外链小窗
       return;
     }
     player.play(i);
@@ -79,7 +83,6 @@ export default function RecordShopClient({ issue }) {
     const hasExt = (Array.isArray(tk?.external_links) && tk.external_links.length) || tk?.external_url;
     if (!hasSrc && hasExt) {
       player.toggle();
-      if (!player.playing) setExtTrack(tk);
       return;
     }
     player.toggle();
@@ -155,8 +158,8 @@ export default function RecordShopClient({ issue }) {
                   </div>
 
                   <div className="col-center">
-                    {extTrack && extTrack.id === tr.id ? (
-                      <ExternalPlayer track={tr} onClose={() => setExtTrack(null)} />
+                    {i === player.active && isExternal(tr) ? (
+                      <ExternalPlayer track={tr} />
                     ) : null}
                     <div
                       className={'cover' + (player.playing && i === player.active ? ' playing live' : '')}
@@ -212,7 +215,7 @@ export default function RecordShopClient({ issue }) {
             {tracks.map((tr, i) => (
               <div key={tr.id || i} className="orow-wrap">
               <div
-                className={'orow' + (i === player.active ? ' on' : '') + (extTrack && extTrack.id === tr.id ? ' ext-open' : '')}
+                className={'orow' + (i === player.active ? ' on' : '') + (i === player.active && isExternal(tr) ? ' ext-open' : '')}
                 onClick={() => { setMode('immersive'); setTimeout(() => goto(i), 0); }}
               >
                 <div className="idx">{i + 1}</div>
@@ -225,9 +228,9 @@ export default function RecordShopClient({ issue }) {
                   <div className="en">{tr.en}</div>
                   <div className="cn">{tr.cn?.split('').join(' ')}</div>
                 </div>
-                {extTrack && extTrack.id === tr.id ? (
+                {i === player.active && isExternal(tr) ? (
                   <div className="orow-ext" onClick={(e) => e.stopPropagation()}>
-                    <ExternalPlayer track={tr} onClose={() => setExtTrack(null)} />
+                    <ExternalPlayer track={tr} />
                   </div>
                 ) : (
                   <div className="ometa">
