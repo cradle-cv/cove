@@ -158,9 +158,6 @@ export default function RecordShopClient({ issue }) {
                   </div>
 
                   <div className="col-center">
-                    {i === player.active && isExternal(tr) ? (
-                      <ExternalPlayer track={tr} />
-                    ) : null}
                     <div
                       className={'cover' + (player.playing && i === player.active ? ' playing live' : '')}
                       onClick={() => (i === player.active ? toggleTrack() : (goto(i), playTrack(i)))}
@@ -184,6 +181,9 @@ export default function RecordShopClient({ issue }) {
 
                   <div className="col-right">
                     <div className="ghost">{i + 1}</div>
+                    {i === player.active && isExternal(tr) ? (
+                      <div className="cr-ext"><ExternalPlayer track={tr} /></div>
+                    ) : null}
                     <Narration
                       beats={tr.beats}
                       index={beatIndexFor(i)}
