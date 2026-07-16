@@ -182,15 +182,15 @@ export default function RecordShopClient({ issue }) {
                   <div className="col-right">
                     <div className="ghost">{i + 1}</div>
                     <div className="narration-block">
-                      {i === player.active && isExternal(tr) ? (
-                        <div className="cr-ext"><ExternalPlayer track={tr} /></div>
-                      ) : null}
                       <Narration
                         beats={tr.beats}
                         index={beatIndexFor(i)}
                         lead={`第 ${CNNUM[i]} 首 · ${issue.theme_zh}`}
                         peeking={i === player.active && hoverBeat >= 0}
                         hint="海面上浮着几个点。等潮水漫过去，或者把手停在上面。"
+                        topSlot={i === player.active && isExternal(tr) ? (
+                          <div className="cr-ext"><ExternalPlayer track={tr} /></div>
+                        ) : null}
                       />
                     </div>
                   </div>
