@@ -35,17 +35,33 @@ export default function RecordShopClient({ issue }) {
   const [mode, setMode] = useState('immersive'); // immersive | overview
   // 涨潮字幕当前段：默认随潮水推进；鼠标移到浮标上时，临时浮起那一段
   const [hoverBeat, setHoverBeat] = useState(-1);
-  const [viewBeat, setViewBeat] = useState(-1); // 手动翻看的字幕段；-1 表示跟随播放
+  // 海浪/字幕的独立时间轴，和音乐无关。播放时自己按歌的时长往前走；
+  // 回点海浪 = 把这个时间轴跳到那个位置，然后继续往前。音乐不受任何影响。
+  const [tideProgress, setTideProgress] = useState(0);
+  const tideRef = useRef(0);
+  useEffect(() => { tideRef.current = tideProgress; }, [tideProgress]);
+  // 切歌时海浪时间轴归零
+  useEffect(() => { tideRef.current = 0; setTideProgress(0); }, [player.active]);
   useEffect(() => {
-    if (viewBeat < 0) return;
-    const t = setTimeout(() => setViewBeat(-1), 8000); // 翻看 8 秒后回到跟随播放
-    return () => clearTimeout(t);
-  }, [viewBeat]);
+    if (!player.playing) return;
+    const dur = (tracks[player.active]?.duration || 200) * 1000;
+    let raf, last = performance.now();
+    const tick = (now) => {
+      const dt = now - last; last = now;
+      let next = tideRef.current + dt / dur;
+      if (next >= 1) next = 1;
+      tideRef.current = next;
+      setTideProgress(next);
+      if (next < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [player.playing, player.active, tracks]);
   const [extTrack, setExtTrack] = useState(null); // 正在外链播放的曲目（弹窗）
 
   // 统一的"播放某首"：有站内音频→正常播；只有外链→弹窗 + 让字幕按时长涨潮
   const playTrack = (i) => {
-    setViewBeat(-1);
+    setTideProgress(0);
     const tk = tracks[i];
     const hasSrc = Array.isArray(tk?.src) && tk.src.length > 0;
     const hasExt = (Array.isArray(tk?.external_links) && tk.external_links.length) || tk?.external_url;
@@ -84,10 +100,9 @@ export default function RecordShopClient({ issue }) {
     const beats = tracks[i]?.beats || [];
     if (!beats.length) return -1;
     if (i === player.active && hoverBeat >= 0) return hoverBeat;
-    if (i === player.active && viewBeat >= 0) return viewBeat;
-    const prog = i === player.active ? player.progress : 0;
+    const prog = i === player.active ? tideProgress : 0;
     return prog > 0.001 ? activeBeatIndex(beats, prog) : -1;
-  }, [tracks, player.active, player.progress, hoverBeat, viewBeat]);
+  }, [tracks, player.active, tideProgress, hoverBeat]);
 
   // 滚动切屏：命中新屏则 select（自动停旧曲）
   useEffect(() => {
@@ -240,25 +255,14 @@ export default function RecordShopClient({ issue }) {
           <Waveform
             peaks={t?.waveform}
             duration={player.duration}
-            progress={(() => {
-              // 海浪着色跟随"正在看的字幕段"，不代表音乐进度
-              const b = beatIndexFor(player.active);
-              const bts = t?.beats || [];
-              if (b >= 0 && bts[b]) return Number(bts[b].at);
-              return player.progress;
-            })()}
+            progress={tideProgress}
             beats={t?.beats || []}
             activeBeat={beatIndexFor(player.active)}
             onSeek={(r) => {
-              // 海浪条拖动 = 翻看字幕，不改音乐进度
-              const bts = tracks[player.active]?.beats || [];
-              if (!bts.length) return;
-              // 找到 r 位置对应的字幕段（at 最接近且不超过 r 的那段）
-              let idx = 0;
-              for (let k = 0; k < bts.length; k++) {
-                if (Number(bts[k].at) <= r) idx = k; else break;
-              }
-              setViewBeat(idx);
+              // 回点海浪 = 时间轴跳到该位置，继续往前涨潮。音乐不受影响。
+              const p = Math.max(0, Math.min(1, r));
+              tideRef.current = p;
+              setTideProgress(p);
             }}
             onHoverBeat={setHoverBeat}
           />
