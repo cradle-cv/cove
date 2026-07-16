@@ -933,6 +933,6 @@ html body{transition:opacity .2s}
 .ejc-text{font-size:13px;letter-spacing:.04em}
 .ejc-arrow{font-size:15px;color:var(--seal)}
 
-.cr-ext{position:absolute;left:0;bottom:calc(50% + 110px);width:100%;max-width:340px;z-index:2}
+.cr-ext{position:relative;width:100%;max-width:340px;margin-bottom:28px;align-self:flex-start}
 .cr-ext .ext-strip{position:relative;width:100%;max-width:340px}
 .cr-ext .ext-netease-frame{width:100%;height:86px}
