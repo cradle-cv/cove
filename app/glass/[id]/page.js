@@ -34,7 +34,7 @@ export default async function GlassDetail({ params }) {
     .eq('poem_id', id).order('created_at', { ascending: false });
 
   return (
-    <main className={`glass-detail gd-${p.glass_color}`}>
+    <main className="glass-detail">
       {/* 熠熠生辉的光晕背景 */}
       <div className="gd-glow" aria-hidden="true">
         <span className="glow-a" /><span className="glow-b" /><span className="glow-c" />
@@ -43,23 +43,23 @@ export default async function GlassDetail({ params }) {
       <div className="gd-inner gd-centered">
         <div className="gd-eyebrow">Sea Glass</div>
 
-        {/* 图片：居中当封面 */}
-        {hasImages ? (
-          <div className="gd-cover">
-            <PoemGallery images={images} />
-          </div>
-        ) : null}
+        {/* 信件主体：颜色和它在滩上的缩略图一致 */}
+        <div className={`letter-card hue-${p.letter_hue || 1}`}>
+          {hasImages ? (
+            <div className="gd-cover">
+              <PoemGallery images={images} />
+            </div>
+          ) : null}
 
-        {/* 标题 · 署名 */}
-        <h1 className="gd-title">{p.title}</h1>
-        <div className="gd-poet">{p.poet_name}</div>
+          <h1 className="gd-title">{p.title}</h1>
+          <div className="gd-poet">{p.poet_name}</div>
 
-        {/* 正文：诗居中 / 故事左对齐 */}
-        <article className={'gd-body' + (isStory ? ' as-story' : ' as-poem')}>
-          {text.split('\n').map((line, i) =>
-            line.trim() ? <p key={i}>{line}</p> : <p key={i} className="blank">&nbsp;</p>
-          )}
-        </article>
+          <article className={'gd-body' + (isStory ? ' as-story' : ' as-poem')}>
+            {text.split('\n').map((line, i) =>
+              line.trim() ? <p key={i}>{line}</p> : <p key={i} className="blank">&nbsp;</p>
+            )}
+          </article>
+        </div>
 
         {/* 播放器：放在正文下方，读完文字再听 */}
         {audio ? (
