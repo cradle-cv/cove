@@ -31,6 +31,9 @@ export default function ComposePage() {
   const [jobId, setJobId] = useState('');
   const [status, setStatus] = useState('');      // '' | pending | processing | done | failed
   const [audioUrl, setAudioUrl] = useState('');
+  const [saved, setSaved] = useState(false);
+  const [adopted, setAdopted] = useState(false);
+  const [titleInput, setTitleInput] = useState('');
   const [err, setErr] = useState('');
   const [elapsed, setElapsed] = useState(0);
   const [history, setHistory] = useState([]);
@@ -69,7 +72,8 @@ export default function ComposePage() {
   const generate = async () => {
     if (!prompt.trim()) { setErr('先写点提示词'); return; }
     stopPolling();
-    setErr(''); setAudioUrl(''); setStatus('pending'); setElapsed(0); setJobId('');
+    setErr(''); setAudioUrl(''); setSaved(false); setAdopted(false); setTitleInput('');
+    setStatus('pending'); setElapsed(0); setJobId('');
 
     try {
       const r = await fetch(`/api/minimax-test?p=${encodeURIComponent(prompt.trim())}`);
@@ -84,7 +88,8 @@ export default function ComposePage() {
           const rr = await fetch(`/api/minimax-test?job=${d.jobId}&t=${Date.now()}`);
           const dd = await rr.json();
           if (dd?.status === 'done' && dd?.audioUrl) {
-            setAudioUrl(dd.audioUrl); setStatus('done'); stopPolling(); loadHistory();
+            setAudioUrl(dd.audioUrl); setSaved(!!dd?.已永久保存); setAdopted(!!dd?.adopted);
+            setStatus('done'); stopPolling(); loadHistory();
           } else if (dd?.status === 'failed') {
             setErr(dd?.error || '生成失败'); setStatus('failed'); stopPolling(); loadHistory();
           }
@@ -96,6 +101,15 @@ export default function ComposePage() {
   };
 
   const retry = () => { stopPolling(); generate(); };
+
+  const adoptThis = async () => {
+    if (!jobId) return;
+    try {
+      await fetch(`/api/minimax-test?adopt=${jobId}&title=${encodeURIComponent(titleInput.trim())}`);
+      setAdopted(true);
+      loadHistory();
+    } catch (e) {}
+  };
 
   if (gate === 'checking') {
     return <main className="compose-wrap"><p className="cp-gate">正在确认身份…</p></main>;
@@ -187,10 +201,27 @@ export default function ComposePage() {
           <div className="cp-result">
             <audio controls src={audioUrl} className="cp-audio" />
             <div className="cp-actions">
-              <a href={audioUrl} target="_blank" rel="noopener noreferrer" download className="cp-dl">下载这段音频</a>
-              <button className="cp-again" onClick={retry}>用同样的提示词再生成一版</button>
+              <a href={audioUrl} target="_blank" rel="noopener noreferrer" download className="cp-dl">下载</a>
+              <button className="cp-again" onClick={retry}>再生成一版</button>
             </div>
-            <p className="cp-note">音频链接有时效，想留下就先下载。</p>
+
+            {adopted ? (
+              <p className="cp-adopted">已收进作品{titleInput ? `：${titleInput}` : ''}</p>
+            ) : (
+              <div className="cp-adopt">
+                <input
+                  className="cp-title-input"
+                  placeholder="给它起个名字（可以不填）"
+                  value={titleInput}
+                  onChange={(e) => setTitleInput(e.target.value)}
+                />
+                <button className="cp-adopt-btn" onClick={adoptThis}>收进我的作品</button>
+              </div>
+            )}
+            <p className="cp-note">
+              {saved ? '已永久保存在海角，不会失效。' : '正在保存到海角…'}
+              生成的都留在下面的记录里，只有你收进作品的才算作品。
+            </p>
           </div>
         )}
       </section>
@@ -203,9 +234,10 @@ export default function ComposePage() {
               <span className={'cph-st st-' + h.status}>
                 {h.status === 'done' ? '完成' : h.status === 'failed' ? '失败' : '生成中'}
               </span>
-              <span className="cph-prompt">{(h.prompt || '（预设）').slice(0, 60)}</span>
-              {h.audio_url ? (
-                <a className="cph-play" href={h.audio_url} target="_blank" rel="noopener noreferrer">听</a>
+              {h.adopted ? <span className="cph-badge">作品</span> : null}
+              <span className="cph-prompt">{h.title || (h.prompt || '（预设）').slice(0, 50)}</span>
+              {(h.r2_url || h.audio_url) ? (
+                <a className="cph-play" href={h.r2_url || h.audio_url} target="_blank" rel="noopener noreferrer">听</a>
               ) : <span className="cph-play dim">—</span>}
             </div>
           ))}
