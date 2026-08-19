@@ -937,3 +937,77 @@ html body{transition:opacity .2s}
 .cr-ext{position:absolute;left:-15px;bottom:calc(100% + 20px);width:100%;max-width:340px;z-index:2}
 .cr-ext .ext-strip{position:relative;width:100%;max-width:340px}
 .cr-ext .ext-netease-frame{width:100%;height:86px}
+
+/* ============ 谱曲台 /compose ============ */
+.compose-wrap{max-width:680px;margin:0 auto;padding:100px 24px 80px}
+.compose-head{text-align:center;margin-bottom:40px}
+.ch-en{font-family:var(--font-display);font-style:italic;font-size:15px;letter-spacing:.3em;color:var(--ink-soft)}
+.ch-cn{font-size:26px;letter-spacing:.3em;color:var(--ink);margin-top:10px;font-weight:500}
+.ch-sub{font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.9;font-weight:300}
+
+.cp-card{background:rgba(255,255,255,.5);border:1px solid var(--hair);border-radius:14px;
+  padding:26px 24px;backdrop-filter:blur(8px)}
+.cp-label{display:block;font-family:var(--font-utility);font-size:11px;letter-spacing:.2em;
+  color:var(--ink-soft);margin-bottom:10px}
+.cp-textarea{width:100%;box-sizing:border-box;border:1px solid var(--hair);border-radius:10px;
+  padding:14px;font-size:14px;line-height:1.9;color:var(--ink);background:rgba(255,255,255,.7);
+  font-family:inherit;resize:vertical}
+.cp-textarea:focus{outline:none;border-color:var(--seaglass)}
+
+.cp-presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.cp-preset{padding:5px 14px;border-radius:16px;border:1px solid var(--hair);
+  background:rgba(255,255,255,.6);color:var(--ink-soft);font-size:12px;cursor:pointer;
+  transition:all .2s}
+.cp-preset:hover{border-color:var(--seaglass);color:var(--ink)}
+
+.cp-tips{margin-top:16px;font-size:12px;line-height:1.9;color:var(--ink-soft);
+  padding:12px 14px;background:rgba(93,154,143,.08);border-radius:8px;font-weight:300}
+
+.cp-go{margin-top:20px;width:100%;padding:13px;border:none;border-radius:24px;
+  background:var(--band);color:#F6EFE0;font-size:14px;letter-spacing:.15em;cursor:pointer;
+  font-family:var(--font-utility);transition:background .2s}
+.cp-go:hover:not(:disabled){background:var(--band-deep)}
+.cp-go:disabled{opacity:.5;cursor:default}
+
+.cp-status{margin-top:20px;font-size:13px;color:var(--ink-soft);display:flex;
+  align-items:center;gap:10px;flex-wrap:wrap}
+.cp-dot{width:8px;height:8px;border-radius:50%;background:var(--seaglass);
+  animation:cpPulse 1.4s ease-in-out infinite;flex:none}
+@keyframes cpPulse{0%,100%{opacity:.3}50%{opacity:1}}
+.cp-slow{width:100%;margin-top:10px;font-size:12px;color:var(--seal)}
+.cp-fail{margin-top:20px;font-size:13px;color:var(--seal);line-height:1.8}
+.cp-err{display:block;margin-top:6px;font-size:11px;color:var(--ink-soft);word-break:break-all}
+.cp-retry,.cp-again{margin-left:10px;padding:5px 14px;border-radius:16px;border:1px solid var(--hair);
+  background:transparent;color:var(--ink);font-size:12px;cursor:pointer}
+.cp-retry:hover,.cp-again:hover{border-color:var(--seaglass)}
+
+.cp-result{margin-top:22px;padding-top:20px;border-top:1px solid var(--hair)}
+.cp-audio{width:100%;margin-bottom:14px}
+.cp-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.cp-dl{font-size:13px;color:var(--band);text-decoration:none;border-bottom:1px solid var(--hair);
+  padding-bottom:2px}
+.cp-dl:hover{border-color:var(--band)}
+.cp-note{margin-top:12px;font-size:11px;color:var(--ink-soft);font-weight:300}
+
+.cp-history{margin-top:34px}
+.cph-title{font-family:var(--font-utility);font-size:11px;letter-spacing:.2em;
+  color:var(--ink-soft);margin-bottom:14px}
+.cph-row{display:flex;align-items:center;gap:12px;padding:10px 0;
+  border-bottom:1px solid rgba(26,34,41,.07);font-size:12px}
+.cph-st{flex:none;font-size:11px;padding:2px 8px;border-radius:10px}
+.st-done{background:rgba(93,154,143,.18);color:var(--band)}
+.st-failed{background:rgba(160,60,60,.12);color:var(--seal)}
+.st-processing,.st-pending{background:rgba(26,34,41,.07);color:var(--ink-soft)}
+.cph-prompt{flex:1;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-weight:300}
+.cph-play{flex:none;color:var(--band);text-decoration:none;font-size:12px}
+.cph-play.dim{color:var(--ink-soft);opacity:.4}
+
+.cp-back{margin-top:40px;text-align:center;font-size:13px}
+.cp-back a{color:var(--ink-soft);text-decoration:none;letter-spacing:.1em}
+.cp-back a:hover{color:var(--ink)}
+
+@media (max-width:560px){
+  .compose-wrap{padding:80px 16px 60px}
+  .cp-card{padding:20px 16px}
+}
