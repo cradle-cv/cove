@@ -2,14 +2,14 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
 export const revalidate = 120;
-export const metadata = { title: '玻璃海滩 · Cove' };
+export const metadata = { title: '琉璃海滩 · Cove' };
 
-// 海玻璃：被海水磨了很多年的碎玻璃，冲上岸时棱角没了，颜色还在。
-// 每一枚封着一首诗，和一段从这首诗里长出来的音乐。
+// 每一封信封着一首诗，和一段从这首诗里长出来的音乐。
+// 信的颜色在发布时定下，之后不变，写信的人认得出自己那一封。
 export default async function GlassPage() {
   const { data: poems } = await supabase
     .from('cove_poems')
-    .select('id, poet_name, title, body, glass_color, audio_src, created_at')
+    .select('id, poet_name, title, body, glass_color, letter_hue, audio_src, created_at')
     .eq('status', 'published')
     .order('created_at', { ascending: false });
 
@@ -17,10 +17,10 @@ export default async function GlassPage() {
     <main className="sheet">
       <div className="sheet-head">
         <div className="no">Sea Glass</div>
-        <div className="th">玻璃海滩</div>
+        <div className="th">琉璃海滩</div>
         <div className="sub">
           写下的诗与故事，像海水磨了很多年的玻璃，一片片冲上岸。<br />
-          捡起任意一枚，里面有一首诗，和从这首诗里长出来的一段音乐。
+          捡起任意一封，里面有一首诗，和从这首诗里长出来的一段音乐。
         </div>
         <div className="hairline" />
       </div>
@@ -28,13 +28,18 @@ export default async function GlassPage() {
       {poems && poems.length > 0 ? (
         <div className="beach">
           {poems.map((p, i) => (
-            <Link key={p.id} href={`/glass/${p.id}`}
-              className={`glass g-${p.glass_color} tilt-${i % 5}`}>
-              <span className="g-title">{p.title}</span>
-              <span className="g-line">{firstLine(p.body)}</span>
-              <span className="g-poet">{p.poet_name}</span>
+            <Link
+              key={p.id}
+              href={`/glass/${p.id}`}
+              className={`letter hue-${p.letter_hue || 1} tilt-${i % 5}`}
+            >
+              <span className="lt-flap" aria-hidden="true" />
+              <span className="lt-stamp" aria-hidden="true" />
+              <span className="lt-title">{p.title}</span>
+              <span className="lt-line">{firstLine(p.body)}</span>
+              <span className="lt-poet">{p.poet_name}</span>
               {Array.isArray(p.audio_src) && p.audio_src.length ? (
-                <span className="g-sound" aria-label="有音乐" />
+                <span className="lt-sound" aria-label="有音乐" />
               ) : null}
             </Link>
           ))}
