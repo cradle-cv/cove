@@ -1013,3 +1013,13 @@ html body{transition:opacity .2s}
 }
 .cp-gate{text-align:center;font-size:14px;color:var(--ink-soft);line-height:2;padding:40px 0}
 .cp-gate a{color:var(--band);text-decoration:none;border-bottom:1px solid var(--hair);margin-left:6px}
+.cp-adopt{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.cp-title-input{flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--hair);
+  border-radius:8px;font-size:13px;background:rgba(255,255,255,.7);color:var(--ink);font-family:inherit}
+.cp-title-input:focus{outline:none;border-color:var(--seaglass)}
+.cp-adopt-btn{padding:8px 18px;border-radius:18px;border:none;background:var(--seaglass);
+  color:#fff;font-size:13px;cursor:pointer;white-space:nowrap;transition:background .2s}
+.cp-adopt-btn:hover{background:var(--band)}
+.cp-adopted{margin-top:16px;font-size:13px;color:var(--seaglass);letter-spacing:.05em}
+.cph-badge{flex:none;font-size:10px;padding:2px 7px;border-radius:8px;
+  background:rgba(93,154,143,.2);color:var(--band);letter-spacing:.05em}
