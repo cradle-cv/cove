@@ -166,8 +166,8 @@ export default function ComposePage() {
         {status === 'processing' && (
           <div className="cp-status">
             <span className="cp-dot" />
-            正在生成，通常要 60 到 90 秒（已等 {elapsed} 秒）
-            {elapsed > 150 && (
+            正在生成，通常要 2 到 4 分钟（已等 {elapsed} 秒）
+            {elapsed > 300 && (
               <div className="cp-slow">
                 等太久了，可能这次没跑成。
                 <button className="cp-retry" onClick={retry}>重新生成</button>
