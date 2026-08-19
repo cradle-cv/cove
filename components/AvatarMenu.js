@@ -86,6 +86,9 @@ export default function AvatarMenu() {
     <div ref={menuRef} className="avatar-drop" style={{ top: pos.top, left: pos.left }}>
       <Link href="/me" onClick={() => setOpen(false)}>我的</Link>
       {profile?.handle ? <Link href={`/u/${profile.handle}`} onClick={() => setOpen(false)}>我的主页</Link> : null}
+      {(isAdmin || roles.includes('poet') || roles.includes('songwriter')) ? (
+        <Link href="/compose" onClick={() => setOpen(false)}>谱曲台</Link>
+      ) : null}
       <Link href="/apply" onClick={() => setOpen(false)}>身份申请</Link>
       {isAdmin ? <Link href="/admin" onClick={() => setOpen(false)}>后台</Link> : null}
       <button onClick={() => { supabase.auth.signOut(); setOpen(false); }}>退出</button>
