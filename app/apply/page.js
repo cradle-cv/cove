@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
 const ROLES = [
+  ['poet', '诗人 / 写字的人', '写诗、写故事。通过后可以在琉璃海滩投稿，并用谱曲台为自己的作品生成氛围配乐。'],
   ['songwriter', '词曲者', '写词、写曲。通过后可以在工作台上传词曲，并用 AI 做小样。'],
   ['performer', '歌手 / 乐手', '唱歌或演奏。可以报名每日演出的邀请函。'],
   ['producer', '制作人', '可以在每日演出发起演出征人与乐团招募。'],
