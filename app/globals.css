@@ -1024,20 +1024,20 @@ html body{transition:opacity .2s}
 .cph-badge{flex:none;font-size:10px;padding:2px 7px;border-radius:8px;
   background:rgba(93,154,143,.2);color:var(--band);letter-spacing:.05em}
 
-/* ============ 琉璃海滩 · 彩色信件 ============ */
-/* 12 色板：深色的彩色，像浸过海水的深色纸，浓而不艳 */
-.hue-1{--lt:#2d4a63}   /* 深海蓝 */
-.hue-2{--lt:#6d2f3d}   /* 深绛红 */
-.hue-3{--lt:#1f5459}   /* 深青 */
-.hue-4{--lt:#7a5423}   /* 深赭金 */
-.hue-5{--lt:#453257}   /* 深紫 */
-.hue-6{--lt:#743c22}   /* 深褐橙 */
-.hue-7{--lt:#2b4b3c}   /* 深墨绿 */
-.hue-8{--lt:#5a3340}   /* 深酒红 */
-.hue-9{--lt:#26374f}   /* 深靛 */
-.hue-10{--lt:#3d2f4d}  /* 深茄 */
-.hue-11{--lt:#5c3a2b}  /* 深陶土 */
-.hue-12{--lt:#1e4640}  /* 深海松 */
+/* ============ 琉璃海滩 · 厚琉璃 ============ */
+/* 12 色：每色一对（亮面 / 深面），做出玻璃从上到下的光衰减 */
+.hue-1{--g1:#3a5a75;--g2:#1c3346}    /* 深海蓝 */
+.hue-2{--g1:#83394a;--g2:#4a1f2a}    /* 深绛红 */
+.hue-3{--g1:#2a6b70;--g2:#123c40}    /* 深青 */
+.hue-4{--g1:#96682c;--g2:#5c3d17}    /* 深赭金 */
+.hue-5{--g1:#584072;--g2:#312243}    /* 深紫 */
+.hue-6{--g1:#8f4c2c;--g2:#552a16}    /* 深褐橙 */
+.hue-7{--g1:#39604d;--g2:#1d3a2c}    /* 深墨绿 */
+.hue-8{--g1:#6e4050;--g2:#3f222d}    /* 深酒红 */
+.hue-9{--g1:#334c6b;--g2:#1a2b3f}    /* 深靛 */
+.hue-10{--g1:#4d3c61;--g2:#2b2138}   /* 深茄 */
+.hue-11{--g1:#714a36;--g2:#42291c}   /* 深陶土 */
+.hue-12{--g1:#2a5c54;--g2:#123430}   /* 深海松 */
 
 /* 手写体：优先系统里的中文手写/楷体 */
 :root{
@@ -1046,49 +1046,60 @@ html body{transition:opacity .2s}
                'Noto Serif SC', serif;
 }
 
-/* 列表：一封封信散在滩上，文字居中 */
+/* 厚琉璃块：光从左上射入，底部透光 */
 .letter{position:relative;display:flex;flex-direction:column;
   align-items:center;justify-content:center;text-align:center;
-  aspect-ratio:4/3;border-radius:6px;padding:22px 18px;overflow:hidden;text-decoration:none;
-  background:var(--lt);box-shadow:0 12px 30px -12px rgba(14,42,52,.45);
-  font-family:var(--font-hand);
-  transition:transform .32s cubic-bezier(.22,.61,.36,1),box-shadow .32s}
-.letter:hover{transform:translateY(-5px) rotate(-.8deg);
-  box-shadow:0 20px 42px -14px rgba(14,42,52,.55)}
-/* 信封盖 */
-.letter .lt-flap{position:absolute;top:0;left:0;right:0;height:44%;
-  background:rgba(255,255,255,.08);clip-path:polygon(0 0,50% 72%,100% 0)}
-/* 邮票 */
-.letter .lt-stamp{position:absolute;top:12px;right:12px;width:24px;height:28px;
-  background:rgba(255,255,255,.14);border-radius:2px}
-.letter .lt-title{position:relative;z-index:1;font-size:21px;color:rgba(255,255,255,.96);
-  letter-spacing:.1em;margin-bottom:10px;font-family:var(--font-hand)}
-.letter .lt-line{position:relative;z-index:1;font-size:13px;color:rgba(255,255,255,.7);
+  aspect-ratio:4/3;border-radius:14px;padding:22px 18px;overflow:hidden;text-decoration:none;
+  color:#fff;font-family:var(--font-hand);
+  background:
+    radial-gradient(120% 90% at 30% 20%, rgba(255,255,255,.34), transparent 46%),
+    linear-gradient(160deg, var(--g1), var(--g2));
+  box-shadow:
+    0 14px 34px -12px rgba(14,42,52,.5),
+    inset 0 2px 3px rgba(255,255,255,.5),
+    inset 0 -30px 40px -30px rgba(255,255,255,.55);
+  transition:transform .34s cubic-bezier(.22,.61,.36,1), box-shadow .34s}
+.letter:hover{transform:translateY(-6px);
+  box-shadow:
+    0 22px 46px -14px rgba(14,42,52,.58),
+    inset 0 2px 4px rgba(255,255,255,.6),
+    inset 0 -34px 46px -30px rgba(255,255,255,.65)}
+
+.letter .lt-flap,.letter .lt-stamp{display:none}  /* 不再是信封 */
+
+.letter .lt-title{position:relative;z-index:2;font-size:21px;color:rgba(255,255,255,.97);
+  letter-spacing:.1em;margin-bottom:9px;font-family:var(--font-hand);
+  text-shadow:0 1px 8px rgba(0,0,0,.18)}
+.letter .lt-line{position:relative;z-index:2;font-size:12.5px;color:rgba(255,255,255,.72);
   margin-bottom:12px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   font-family:var(--font-hand)}
-.letter .lt-poet{position:relative;z-index:1;font-size:11.5px;letter-spacing:.22em;
+.letter .lt-poet{position:relative;z-index:2;font-size:11px;letter-spacing:.22em;
   color:rgba(255,255,255,.55);font-family:var(--font-hand)}
 .letter .lt-sound{position:absolute;bottom:14px;right:14px;width:6px;height:6px;border-radius:50%;
-  background:rgba(255,255,255,.55);z-index:1}
+  background:rgba(255,255,255,.6);z-index:2}
 
-/* 详情页：背景是网站主色，只有信件卡片染色；标题和正文都在卡片里居中 */
-.glass-detail .letter-card{background:var(--lt);border-radius:12px;
+/* 详情页：背景网站主色，信件卡片同样是厚琉璃，文字左对齐 */
+.glass-detail .letter-card{border-radius:16px;
   padding:52px 44px 46px;color:#fff;width:100%;text-align:left;
   font-family:var(--font-hand);
-  box-shadow:0 24px 58px -24px rgba(14,42,52,.5)}
+  background:
+    radial-gradient(110% 80% at 28% 14%, rgba(255,255,255,.3), transparent 48%),
+    linear-gradient(165deg, var(--g1), var(--g2));
+  box-shadow:
+    0 26px 60px -22px rgba(14,42,52,.55),
+    inset 0 2px 4px rgba(255,255,255,.5),
+    inset 0 -40px 56px -40px rgba(255,255,255,.5)}
 .glass-detail .letter-card .gd-title{color:rgba(255,255,255,.97);font-family:var(--font-hand);
-  letter-spacing:.12em}
+  letter-spacing:.12em;text-align:left;text-shadow:0 1px 10px rgba(0,0,0,.18)}
 .glass-detail .letter-card .gd-poet{color:rgba(255,255,255,.6);font-family:var(--font-hand);
-  letter-spacing:.24em}
+  letter-spacing:.24em;text-align:left;margin-bottom:30px}
 .glass-detail .letter-card .gd-body{font-family:var(--font-hand)}
 .glass-detail .letter-card .gd-body p{color:rgba(255,255,255,.93);font-family:var(--font-hand)}
-.glass-detail .letter-card .gd-body.as-poem{text-align:left}
-.glass-detail .letter-card .gd-body.as-story{text-align:left}
-.glass-detail .letter-card .gd-title{text-align:left}
-.glass-detail .letter-card .gd-poet{text-align:left;margin-bottom:30px}
+.glass-detail .letter-card .gd-body.as-poem{text-align:left;max-width:none}
+.glass-detail .letter-card .gd-body.as-story{text-align:left;max-width:none}
 .glass-detail .letter-card .gd-cover{margin-bottom:30px}
 
 @media (max-width:560px){
-  .glass-detail .letter-card{padding:36px 22px 30px}
+  .glass-detail .letter-card{padding:36px 24px 30px}
   .letter .lt-title{font-size:18px}
 }
