@@ -7,6 +7,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 
 const ROLES = [
+  ['poet', '诗人'],
   ['songwriter', '词曲者'],
   ['performer', '歌手/乐手'],
   ['producer', '制作人'],
