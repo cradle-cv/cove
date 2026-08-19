@@ -3,6 +3,7 @@
 // 在页面上写提示词、点生成、等一会儿自动出音乐，可试听可下载，有历史记录。
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
 // 几个起手式，点一下填进输入框，再自己改
 const PRESETS = [
@@ -25,6 +26,7 @@ const PRESETS = [
 ];
 
 export default function ComposePage() {
+  const [gate, setGate] = useState('checking'); // checking | ok | nologin | noperm
   const [prompt, setPrompt] = useState(PRESETS[0].text);
   const [jobId, setJobId] = useState('');
   const [status, setStatus] = useState('');      // '' | pending | processing | done | failed
@@ -43,7 +45,19 @@ export default function ComposePage() {
     } catch (e) {}
   };
 
-  useEffect(() => { loadHistory(); }, []);
+  // 权限：登录 + 有创作者身份（诗人/词曲）或管理员
+  useEffect(() => {
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) { setGate('nologin'); return; }
+      const { data: me } = await supabase
+        .from('users').select('role, roles').eq('auth_id', session.user.id).maybeSingle();
+      const roles = me?.roles || [];
+      const allowed = me?.role === 'admin' || roles.includes('poet') || roles.includes('songwriter');
+      setGate(allowed ? 'ok' : 'noperm');
+      if (allowed) loadHistory();
+    })();
+  }, []);
 
   const stopPolling = () => {
     if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
@@ -82,6 +96,34 @@ export default function ComposePage() {
   };
 
   const retry = () => { stopPolling(); generate(); };
+
+  if (gate === 'checking') {
+    return <main className="compose-wrap"><p className="cp-gate">正在确认身份…</p></main>;
+  }
+  if (gate === 'nologin') {
+    return (
+      <main className="compose-wrap">
+        <div className="compose-head">
+          <div className="ch-en">Compose</div>
+          <h1 className="ch-cn">谱 曲 台</h1>
+        </div>
+        <p className="cp-gate">先靠岸再进来。<Link href="/login">去登录</Link></p>
+      </main>
+    );
+  }
+  if (gate === 'noperm') {
+    return (
+      <main className="compose-wrap">
+        <div className="compose-head">
+          <div className="ch-en">Compose</div>
+          <h1 className="ch-cn">谱 曲 台</h1>
+        </div>
+        <p className="cp-gate">
+          谱曲台开给有创作者身份的人。<Link href="/apply">申请身份</Link>
+        </p>
+      </main>
+    );
+  }
 
   return (
     <main className="compose-wrap">
