@@ -61,25 +61,8 @@ export async function GET(req) {
   if (insErr) return NextResponse.json({ ok: false, step: '建任务', error: insErr.message }, { status: 500 });
   const jobId = created.id;
 
-  const fnUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/music-generate`;
-  const controller = new AbortController();
-  const t = setTimeout(() => controller.abort(), 3000);
-  try {
-    await fetch(fnUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-        apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      },
-      body: JSON.stringify({ jobId, v, prompt: customPrompt || undefined }),
-      signal: controller.signal,
-    });
-  } catch (e) {
-    // 预期的断开，Edge Function 继续跑
-  } finally {
-    clearTimeout(t);
-  }
+  // 触发由数据库触发器（pg_net）自动完成，这里不需要再调 Edge Function。
+  // 这样触发源在 Supabase 内部，不会因为 Vercel 断开连接而被掐死。
 
   return NextResponse.json({
     ok: true,
