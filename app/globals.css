@@ -1105,32 +1105,29 @@ html body{transition:opacity .2s}
 }
 
 /* ============ 琉璃海滩 · 诗板 ============ */
-/* 短诗铺成一块纯色竖板：底色取该信 hue 的亮面 --g1，纯色不加高光；
-   标题宋体、日期细黑半透明、正文加粗宋体，行距松，整体竖向居中、左对齐。 */
-.glass-detail .letter-card .poem-plate{
-  --plate-color:var(--g1,#1c3346);
+/* 短诗就是一块纯色竖板，不套卡片、不加高光和渐变：
+   底色取该信 hue 的亮面 --g1；标题宋体、日期细黑半透明、正文加粗宋体，
+   行距松，整体竖向居中、左对齐。 */
+.glass-detail .poem-plate{
   container-type:inline-size;
   width:100%;aspect-ratio:1/1.414;
-  background:var(--plate-color);
+  background:var(--g1,#1c3346);
   color:#fff;display:flex;align-items:center;
-  overflow:hidden;border-radius:10px;margin-bottom:22px;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
-.glass-detail .letter-card .poem-plate__inner{
-  width:100%;padding:6% 10% 6% 18%;text-align:left}
-.glass-detail .letter-card .poem-plate__title{
+  overflow:hidden;border-radius:0}
+.glass-detail .poem-plate__inner{width:100%;padding:6% 10% 6% 18%;text-align:left}
+.glass-detail .poem-plate__title{
   margin:0 0 .55em;font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",serif;
-  font-weight:500;font-size:clamp(22px,4.6cqw,34px);letter-spacing:.02em;line-height:1.2;
-  color:#fff;text-shadow:none}
-.glass-detail .letter-card .poem-plate__date{
+  font-weight:500;font-size:clamp(22px,4.6cqw,34px);letter-spacing:.02em;line-height:1.2;color:#fff}
+.glass-detail .poem-plate__date{
   margin:0 0 .9em;font-family:"Noto Sans SC","Source Han Sans SC","PingFang SC","Helvetica Neue",sans-serif;
   font-weight:200;font-size:clamp(13px,2.6cqw,19px);color:rgba(255,255,255,.55);white-space:pre}
-.glass-detail .letter-card .poem-plate__body p{
+.glass-detail .poem-plate__body p{
   margin:0;font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",serif;
-  font-weight:700;font-size:clamp(16px,3.4cqw,26px);line-height:2.3;letter-spacing:.03em;
-  color:#fff}
-/* 板下只留作者名 */
-.glass-detail .letter-card .gd-poet--under-plate{margin-bottom:0;margin-top:4px}
+  font-weight:700;font-size:clamp(16px,3.4cqw,26px);line-height:2.3;letter-spacing:.03em;color:#fff}
+.glass-detail .poem-plate__poet{
+  margin-top:1.6em;font-family:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+  font-weight:200;font-size:clamp(12px,2.4cqw,16px);letter-spacing:.2em;color:rgba(255,255,255,.5)}
 @media (max-width:480px){
-  .glass-detail .letter-card .poem-plate__inner{padding-left:14%}
-  .glass-detail .letter-card .poem-plate__body p{line-height:2.1}
+  .glass-detail .poem-plate__inner{padding-left:14%}
+  .glass-detail .poem-plate__body p{line-height:2.1}
 }
