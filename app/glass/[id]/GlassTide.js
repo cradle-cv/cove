@@ -1,7 +1,7 @@
 'use client';
 // 玻璃海潮播放器
 // 一段音乐铺成一片起伏的海。潮水漫过的地方是这枚玻璃的颜色，没漫到的是灰。
-// 点海面任意处跳转。不自动播放——访客点了播放键才响。
+// 点海面任意处跳转。进页面尝试自动播放一次；访客按了暂停，就只有再按播放才会响。
 import { useRef, useEffect, useState, useCallback } from 'react';
 
 // 每种玻璃底色对应的潮水颜色
@@ -16,6 +16,8 @@ const TIDE = {
 export default function GlassTide({ src, color = 'green' }) {
   const audioRef = useRef(null);
   const cvRef = useRef(null);
+  // 访客是否主动按过暂停：按过之后，任何"补播"都不再触发
+  const userPausedRef = useRef(false);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [dur, setDur] = useState(0);
@@ -50,15 +52,17 @@ export default function GlassTide({ src, color = 'green' }) {
 
   useEffect(() => { draw(); }, [draw]);
 
-  // 若自动播放被浏览器拦截，用户第一次与页面交互时补播一次
+  // 若自动播放被浏览器拦截，用户第一次与页面交互时补播一次。
+  // 只在"从未播放过、也从未被用户暂停过"时生效；用户按过暂停就彻底退出。
   useEffect(() => {
-    if (playing) return;
+    if (playing || userPausedRef.current) return;
     const kick = () => {
+      cleanup();
+      if (userPausedRef.current) return;
       const a = audioRef.current;
-      if (a && a.paused) {
+      if (a && a.paused && a.currentTime === 0) {
         a.play().then(() => setPlaying(true)).catch(() => {});
       }
-      cleanup();
     };
     const cleanup = () => {
       window.removeEventListener('pointerdown', kick);
@@ -70,6 +74,7 @@ export default function GlassTide({ src, color = 'green' }) {
     window.addEventListener('scroll', kick, { once: true, passive: true });
     return cleanup;
   }, [playing]);
+
   useEffect(() => {
     const on = () => draw();
     window.addEventListener('resize', on);
@@ -79,8 +84,14 @@ export default function GlassTide({ src, color = 'green' }) {
   const toggle = () => {
     const a = audioRef.current;
     if (!a) return;
-    if (a.paused) { a.play(); setPlaying(true); }
-    else { a.pause(); setPlaying(false); }
+    if (a.paused) {
+      userPausedRef.current = false;
+      a.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    } else {
+      userPausedRef.current = true;
+      a.pause();
+      setPlaying(false);
+    }
   };
 
   const seek = (e) => {
@@ -106,7 +117,7 @@ export default function GlassTide({ src, color = 'green' }) {
         onLoadedMetadata={(e) => {
           setDur(e.target.duration || 0);
           // 立即尝试自动播放。不能用 setTimeout 延迟——延迟会丢失浏览器
-          // 因用户点击而获得的自动播放许可，导致被拦。图片已压缩，本就够快。
+          // 因用户点击而获得的自动播放许可，导致被拦。
           e.target.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
         }}
         onTimeUpdate={(e) => {
