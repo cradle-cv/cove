@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
 export const revalidate = 300;
@@ -20,13 +21,22 @@ export default async function HarborsPage() {
       </div>
       {list && list.length > 0 ? (
         <div className="shelf">
-          {list.map((p) => (
-            <a key={p.id} href={p.link_url || '#'} target="_blank" rel="noreferrer">
-              <span className="th">{p.name}</span>
-              <span className="en">{p.kind || ''}</span>
-              <span className="date">{p.city || ''}</span>
-            </a>
-          ))}
+          {list.map((p) => {
+            // 站内的港（如 /fangfei）用 Link 同窗打开；站外的另开一窗
+            const internal = p.link_url && p.link_url.startsWith('/');
+            const inner = (
+              <>
+                <span className="th">{p.name}</span>
+                <span className="en">{p.kind || ''}</span>
+                <span className="date">{p.city || ''}</span>
+              </>
+            );
+            return internal ? (
+              <Link key={p.id} href={p.link_url}>{inner}</Link>
+            ) : (
+              <a key={p.id} href={p.link_url || '#'} target="_blank" rel="noreferrer">{inner}</a>
+            );
+          })}
         </div>
       ) : null}
       <p className="dredging">邻港的灯亮着，等船来</p>
