@@ -1,6 +1,6 @@
 // 诗社自述。文案由诗社提供，先放占位；以后可改成从表里读。
 export const metadata = { title: '关于 · 港口甲' };
-export default function Harbor AAbout() {
+export default function HarborAAbout() {
   return (
     <main className="ff-main">
       <article className="ff-about">

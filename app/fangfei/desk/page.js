@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
-export default function Harbor ADesk() {
+export default function HarborADesk() {
   const [user, setUser] = useState(undefined);
   const [editor, setEditor] = useState(false);
   const [rows, setRows] = useState([]);

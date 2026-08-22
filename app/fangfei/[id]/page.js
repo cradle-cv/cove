@@ -19,7 +19,7 @@ function cnDate(value) {
   if (isNaN(d)) return '';
   return `${cnNum(d.getFullYear())}年${cnDay(d.getMonth() + 1)}月${cnDay(d.getDate())}日`;
 }
-export default async function Harbor ADetail({ params }) {
+export default async function HarborADetail({ params }) {
   const { id } = await params;
   const { data: p } = await supabase
     .from('ff_poems').select('*').eq('id', id).eq('status', 'published').maybeSingle();

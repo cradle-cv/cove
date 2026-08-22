@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 export const revalidate = 120;
 // 诗社首页：一排排竖立的笺，只露题目和署名。
-export default async function Harbor APage() {
+export default async function HarborAPage() {
   const { data: poems } = await supabase
     .from('ff_poems')
     .select('id, poet_name, title, hue, audio_src, published_at')

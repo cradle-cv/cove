@@ -3,7 +3,7 @@ import Link from 'next/link';
 // 进了 /fangfei，海角的刊头隐掉（见 globals.css 里 body:has(.ff-root)），
 // 诗社有自己的页头、导航和页脚；只在页脚留一行"寄宿于海角"。
 export const metadata = { title: '港口甲', description: '一群写诗的人' };
-export default function Harbor ALayout({ children }) {
+export default function HarborALayout({ children }) {
   return (
     <div className="ff-root">
       <header className="ff-head">

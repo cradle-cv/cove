@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import AudioUploader from '@/components/AudioUploader';
 
-export default function Harbor ASubmit() {
+export default function HarborASubmit() {
   const [user, setUser] = useState(null);
   const [form, setForm] = useState({ poet_name: '', title: '', body: '', gen_note: '', audio: '' });
   const [msg, setMsg] = useState('');
