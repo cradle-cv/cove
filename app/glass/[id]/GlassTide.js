@@ -12,8 +12,14 @@ const TIDE = {
   white: '150,154,150',
   red: '150,76,62',
 };
+// 12 色琉璃的潮水色：取各 hue 的亮面 --g1，和滩上、诗板同一个颜色
+const HUE_TIDE = {
+  1: '58,90,117', 2: '131,57,74', 3: '42,107,112', 4: '150,104,44',
+  5: '88,64,114', 6: '143,76,44', 7: '57,96,77', 8: '110,64,80',
+  9: '51,76,107', 10: '77,60,97', 11: '113,74,54', 12: '42,92,84',
+};
 
-export default function GlassTide({ src, color = 'green' }) {
+export default function GlassTide({ src, hue, color = 'green' }) {
   const audioRef = useRef(null);
   const cvRef = useRef(null);
   // 访客是否主动按过暂停：按过之后，任何"补播"都不再触发
@@ -22,7 +28,7 @@ export default function GlassTide({ src, color = 'green' }) {
   const [progress, setProgress] = useState(0);
   const [dur, setDur] = useState(0);
   const [cur, setCur] = useState(0);
-  const rgb = TIDE[color] || TIDE.green;
+  const rgb = HUE_TIDE[hue] || TIDE[color] || TIDE.green;
 
   // 一片稳定的假海（按 src 生成，不同曲子波形不同但每次一致）
   const wave = useWave(src);
