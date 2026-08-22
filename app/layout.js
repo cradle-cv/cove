@@ -3,12 +3,10 @@ import Link from 'next/link';
 import AvatarMenu from '@/components/AvatarMenu';
 import { LanguageProvider } from '@/components/i18n/LanguageContext';
 import LangToggle from '@/components/i18n/LangToggle';
-
 export const metadata = {
   title: '海角 Cove',
   description: '音乐人的避风港，也是一座灵感的灯塔。',
 };
-
 // 导航映射（同构摇篮：每日一展｜艺术阅览室｜作品集｜艺术家｜杂志社｜驻地｜合作伙伴）
 // 摇篮                → 海角
 // 每日一展            → 每日演出   /festival （制作人邀请函，召集乐手/歌手/词曲作者）
@@ -18,19 +16,18 @@ export const metadata = {
 // 杂志社              → 海角电台   /radio    （主持人专访）
 // 驻地                → 灯塔       /lighthouse（随内容积累逐层点亮）
 // 合作伙伴            → 邻港       /harbors
-// （海角原生）        → 海玻璃     /glass    （诗 + AI 辅助生成的音乐，各色卡片）
+// （海角原生）        → 琉璃海滩   /glass    （诗 + AI 辅助生成的音乐，各色琉璃）
 const NAV = [
   { href: '/festival', label: '每日演出' },
   { href: '/records', label: '打捞碎月' },
   { href: '/dock', label: '原创码头' },
-  { href: '/glass', label: '玻璃海滩' },
+  { href: '/glass', label: '琉璃海滩' },
   { href: '/musicians', label: '音乐人' },
   { href: '/radio', label: '海角电台' },
   { href: '/lighthouse', label: '灯塔' },
   { href: '/harbors', label: '邻港' },
   { href: '/login', label: '靠岸' },
 ];
-
 export default function RootLayout({ children }) {
   return (
     <html lang="zh-Hans" suppressHydrationWarning>
@@ -50,7 +47,6 @@ export default function RootLayout({ children }) {
       <body>
         <LanguageProvider>
         <div className="cove-bg" />
-
         <header className="band">
           <div className="band-left">
             <AvatarMenu />
@@ -73,7 +69,6 @@ export default function RootLayout({ children }) {
             </svg>
           </Link>
         </header>
-
         {children}
         </LanguageProvider>
       </body>
