@@ -45,7 +45,7 @@ export default async function GlassDetail({ params }) {
         <div className={`letter-card hue-${p.letter_hue || 1}`}>
           {/* 短诗：整块纯色诗板，标题 / 日期 / 正文都在板上 */}
           {!isStory ? (
-            <div className="poem-plate" style={p.glass_color ? { '--plate-color': p.glass_color } : undefined}>
+            <div className="poem-plate">
               <div className="poem-plate__inner">
                 <h1 className="poem-plate__title">{p.title}</h1>
                 <p className="poem-plate__date">{plateDate(p.created_at)}</p>
