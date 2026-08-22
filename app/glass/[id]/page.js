@@ -8,7 +8,7 @@ export async function generateMetadata({ params }) {
   const { id } = await params;
   const { data } = await supabase.from('cove_poems')
     .select('title, poet_name').eq('id', id).maybeSingle();
-  return { title: data ? `${data.title} · 玻璃海滩` : '玻璃海滩 · Cove' };
+  return { title: data ? `${data.title} · 琉璃海滩` : '琉璃海滩 · Cove' };
 }
 // 日期写成 July 8th  2023 这种样子
 function plateDate(value) {
