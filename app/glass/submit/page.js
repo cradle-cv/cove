@@ -1,22 +1,20 @@
 'use client';
 // 把一枚放到滩上 · 诗人上传
-// 登录后可传：诗 + 颜色 + 音乐（AI 辅助生成后的音频文件）+ 一段生成手记。
+// 登录后可传：诗 + 音乐（AI 辅助生成后的音频文件）+ 一段生成手记。
 // 上传后是 pending，管理员放行后才出现在滩上。
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import AudioUploader from '@/components/AudioUploader';
 
-const COLORS = [
-  ['green', '海玻璃绿'],
-  ['blue', '瓶底蓝'],
-  ['amber', '琥珀'],
-  ['white', '乳白'],
-];
+// 颜色不由诗人选：放到滩上的那一刻随机拿到 1–12 中的一色，之后不变。
+// 兼容旧字段 glass_color：按色相归到最近的一个词，播放器旧逻辑还能用
+const HUE_TO_GLASS = { 1:'blue', 2:'red', 3:'green', 4:'amber', 5:'blue', 6:'amber',
+  7:'green', 8:'red', 9:'blue', 10:'blue', 11:'amber', 12:'green' };
 
 export default function GlassSubmit() {
   const [user, setUser] = useState(null);
-  const [form, setForm] = useState({ poet_name: '', title: '', body: '', glass_color: 'green', gen_note: '', audio: '' });
+  const [form, setForm] = useState({ poet_name: '', title: '', body: '', gen_note: '', audio: '' });
   const [msg, setMsg] = useState('');
   const [done, setDone] = useState(false);
 
@@ -29,12 +27,14 @@ export default function GlassSubmit() {
       setMsg('署名、标题、诗的正文都要有'); return;
     }
     setMsg('正在放到滩上…');
+    const hue = 1 + Math.floor(Math.random() * 12);
     const { error } = await supabase.from('cove_poems').insert({
       author_auth_id: user.id,
       poet_name: form.poet_name.trim(),
       title: form.title.trim(),
       body: form.body,
-      glass_color: form.glass_color,
+      letter_hue: hue,
+      glass_color: HUE_TO_GLASS[hue] || 'green',
       gen_note: form.gen_note.trim() || null,
       audio_src: form.audio ? [form.audio] : null,
     });
@@ -74,7 +74,7 @@ export default function GlassSubmit() {
       <div className="sheet-head">
         <div className="no">Sea Glass</div>
         <div className="th">把一枚放到滩上</div>
-        <div className="sub">一首诗或一段故事，一种颜色，配上你用 AI 做出来的音乐。</div>
+        <div className="sub">一首诗或一段故事，配上你用 AI 做出来的音乐。颜色由海水决定。</div>
         <div className="hairline" />
       </div>
 
@@ -88,10 +88,6 @@ export default function GlassSubmit() {
         <label>诗或故事（保留换行）</label>
         <textarea rows={10} value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} />
 
-        <label>这一枚的颜色</label>
-        <select value={form.glass_color} onChange={(e) => setForm({ ...form, glass_color: e.target.value })}>
-          {COLORS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-        </select>
 
         <label>音乐（在 Suno 等工具里生成后，把音频传上来；mp3，10MB 以内）</label>
         <AudioUploader
