@@ -937,3 +937,210 @@ html body{transition:opacity .2s}
 .cr-ext{position:absolute;left:-15px;bottom:calc(100% + 20px);width:100%;max-width:340px;z-index:2}
 .cr-ext .ext-strip{position:relative;width:100%;max-width:340px}
 .cr-ext .ext-netease-frame{width:100%;height:86px}
+
+/* ============ 谱曲台 /compose ============ */
+.compose-wrap{max-width:680px;margin:0 auto;padding:100px 24px 80px}
+.compose-head{text-align:center;margin-bottom:40px}
+.ch-en{font-family:var(--font-display);font-style:italic;font-size:15px;letter-spacing:.3em;color:var(--ink-soft)}
+.ch-cn{font-size:26px;letter-spacing:.3em;color:var(--ink);margin-top:10px;font-weight:500}
+.ch-sub{font-size:13px;color:var(--ink-soft);margin-top:14px;line-height:1.9;font-weight:300}
+
+.cp-card{background:rgba(255,255,255,.5);border:1px solid var(--hair);border-radius:14px;
+  padding:26px 24px;backdrop-filter:blur(8px)}
+.cp-label{display:block;font-family:var(--font-utility);font-size:11px;letter-spacing:.2em;
+  color:var(--ink-soft);margin-bottom:10px}
+.cp-textarea{width:100%;box-sizing:border-box;border:1px solid var(--hair);border-radius:10px;
+  padding:14px;font-size:14px;line-height:1.9;color:var(--ink);background:rgba(255,255,255,.7);
+  font-family:inherit;resize:vertical}
+.cp-textarea:focus{outline:none;border-color:var(--seaglass)}
+
+.cp-presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.cp-preset{padding:5px 14px;border-radius:16px;border:1px solid var(--hair);
+  background:rgba(255,255,255,.6);color:var(--ink-soft);font-size:12px;cursor:pointer;
+  transition:all .2s}
+.cp-preset:hover{border-color:var(--seaglass);color:var(--ink)}
+
+.cp-tips{margin-top:16px;font-size:12px;line-height:1.9;color:var(--ink-soft);
+  padding:12px 14px;background:rgba(93,154,143,.08);border-radius:8px;font-weight:300}
+
+.cp-go{margin-top:20px;width:100%;padding:13px;border:none;border-radius:24px;
+  background:var(--band);color:#F6EFE0;font-size:14px;letter-spacing:.15em;cursor:pointer;
+  font-family:var(--font-utility);transition:background .2s}
+.cp-go:hover:not(:disabled){background:var(--band-deep)}
+.cp-go:disabled{opacity:.5;cursor:default}
+
+.cp-status{margin-top:20px;font-size:13px;color:var(--ink-soft);display:flex;
+  align-items:center;gap:10px;flex-wrap:wrap}
+.cp-dot{width:8px;height:8px;border-radius:50%;background:var(--seaglass);
+  animation:cpPulse 1.4s ease-in-out infinite;flex:none}
+@keyframes cpPulse{0%,100%{opacity:.3}50%{opacity:1}}
+.cp-slow{width:100%;margin-top:10px;font-size:12px;color:var(--seal)}
+.cp-fail{margin-top:20px;font-size:13px;color:var(--seal);line-height:1.8}
+.cp-err{display:block;margin-top:6px;font-size:11px;color:var(--ink-soft);word-break:break-all}
+.cp-retry,.cp-again{margin-left:10px;padding:5px 14px;border-radius:16px;border:1px solid var(--hair);
+  background:transparent;color:var(--ink);font-size:12px;cursor:pointer}
+.cp-retry:hover,.cp-again:hover{border-color:var(--seaglass)}
+
+.cp-result{margin-top:22px;padding-top:20px;border-top:1px solid var(--hair)}
+.cp-audio{width:100%;margin-bottom:14px}
+.cp-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.cp-dl{font-size:13px;color:var(--band);text-decoration:none;border-bottom:1px solid var(--hair);
+  padding-bottom:2px}
+.cp-dl:hover{border-color:var(--band)}
+.cp-note{margin-top:12px;font-size:11px;color:var(--ink-soft);font-weight:300}
+
+.cp-history{margin-top:34px}
+.cph-title{font-family:var(--font-utility);font-size:11px;letter-spacing:.2em;
+  color:var(--ink-soft);margin-bottom:14px}
+.cph-row{display:flex;align-items:center;gap:12px;padding:10px 0;
+  border-bottom:1px solid rgba(26,34,41,.07);font-size:12px}
+.cph-st{flex:none;font-size:11px;padding:2px 8px;border-radius:10px}
+.st-done{background:rgba(93,154,143,.18);color:var(--band)}
+.st-failed{background:rgba(160,60,60,.12);color:var(--seal)}
+.st-processing,.st-pending{background:rgba(26,34,41,.07);color:var(--ink-soft)}
+.cph-prompt{flex:1;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-weight:300}
+.cph-play{flex:none;color:var(--band);text-decoration:none;font-size:12px}
+.cph-play.dim{color:var(--ink-soft);opacity:.4}
+
+.cp-back{margin-top:40px;text-align:center;font-size:13px}
+.cp-back a{color:var(--ink-soft);text-decoration:none;letter-spacing:.1em}
+.cp-back a:hover{color:var(--ink)}
+
+@media (max-width:560px){
+  .compose-wrap{padding:80px 16px 60px}
+  .cp-card{padding:20px 16px}
+}
+.cp-gate{text-align:center;font-size:14px;color:var(--ink-soft);line-height:2;padding:40px 0}
+.cp-gate a{color:var(--band);text-decoration:none;border-bottom:1px solid var(--hair);margin-left:6px}
+.cp-adopt{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.cp-title-input{flex:1;min-width:180px;padding:8px 12px;border:1px solid var(--hair);
+  border-radius:8px;font-size:13px;background:rgba(255,255,255,.7);color:var(--ink);font-family:inherit}
+.cp-title-input:focus{outline:none;border-color:var(--seaglass)}
+.cp-adopt-btn{padding:8px 18px;border-radius:18px;border:none;background:var(--seaglass);
+  color:#fff;font-size:13px;cursor:pointer;white-space:nowrap;transition:background .2s}
+.cp-adopt-btn:hover{background:var(--band)}
+.cp-adopted{margin-top:16px;font-size:13px;color:var(--seaglass);letter-spacing:.05em}
+.cph-badge{flex:none;font-size:10px;padding:2px 7px;border-radius:8px;
+  background:rgba(93,154,143,.2);color:var(--band);letter-spacing:.05em}
+
+/* ============ 琉璃海滩 · 厚琉璃 ============ */
+/* 12 色：每色一对（亮面 / 深面），做出玻璃从上到下的光衰减 */
+.hue-1{--g1:#3a5a75;--g2:#1c3346}    /* 深海蓝 */
+.hue-2{--g1:#83394a;--g2:#4a1f2a}    /* 深绛红 */
+.hue-3{--g1:#2a6b70;--g2:#123c40}    /* 深青 */
+.hue-4{--g1:#96682c;--g2:#5c3d17}    /* 深赭金 */
+.hue-5{--g1:#584072;--g2:#312243}    /* 深紫 */
+.hue-6{--g1:#8f4c2c;--g2:#552a16}    /* 深褐橙 */
+.hue-7{--g1:#39604d;--g2:#1d3a2c}    /* 深墨绿 */
+.hue-8{--g1:#6e4050;--g2:#3f222d}    /* 深酒红 */
+.hue-9{--g1:#334c6b;--g2:#1a2b3f}    /* 深靛 */
+.hue-10{--g1:#4d3c61;--g2:#2b2138}   /* 深茄 */
+.hue-11{--g1:#714a36;--g2:#42291c}   /* 深陶土 */
+.hue-12{--g1:#2a5c54;--g2:#123430}   /* 深海松 */
+
+/* 手写体：优先系统里的中文手写/楷体 */
+:root{
+  --font-hand: 'Kaiti SC', 'STKaiti', '楷体', KaiTi, 'Kaiti TC',
+               'TW-Kai', 'BiauKai', 'Xingkai SC', 'STXingkai',
+               'Noto Serif SC', serif;
+}
+
+/* 厚琉璃块：光从左上射入，底部透光 */
+.letter{position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  aspect-ratio:4/3;border-radius:14px;padding:22px 18px;overflow:hidden;text-decoration:none;
+  color:#fff;font-family:var(--font-hand);
+  background:
+    radial-gradient(120% 90% at 30% 20%, rgba(255,255,255,.34), transparent 46%),
+    linear-gradient(160deg, var(--g1), var(--g2));
+  box-shadow:
+    0 14px 34px -12px rgba(14,42,52,.5),
+    inset 0 2px 3px rgba(255,255,255,.5),
+    inset 0 -30px 40px -30px rgba(255,255,255,.55);
+  transition:transform .34s cubic-bezier(.22,.61,.36,1), box-shadow .34s}
+.letter:hover{transform:translateY(-6px);
+  box-shadow:
+    0 22px 46px -14px rgba(14,42,52,.58),
+    inset 0 2px 4px rgba(255,255,255,.6),
+    inset 0 -34px 46px -30px rgba(255,255,255,.65)}
+
+.letter .lt-flap,.letter .lt-stamp{display:none}  /* 不再是信封 */
+
+.letter .lt-title{position:relative;z-index:2;font-size:21px;color:rgba(255,255,255,.97);
+  letter-spacing:.1em;margin-bottom:9px;font-family:var(--font-hand);
+  text-shadow:0 1px 8px rgba(0,0,0,.18)}
+.letter .lt-line{position:relative;z-index:2;font-size:12.5px;color:rgba(255,255,255,.72);
+  margin-bottom:12px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-family:var(--font-hand)}
+.letter .lt-poet{position:relative;z-index:2;font-size:11px;letter-spacing:.22em;
+  color:rgba(255,255,255,.55);font-family:var(--font-hand)}
+.letter .lt-sound{position:absolute;bottom:14px;right:14px;width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,.6);z-index:2}
+
+/* 详情页：背景网站主色，信件卡片同样是厚琉璃，文字左对齐 */
+.glass-detail .letter-card{border-radius:16px;
+  padding:52px 44px 46px;color:#fff;width:100%;text-align:left;
+  font-family:var(--font-hand);
+  background:
+    radial-gradient(110% 80% at 28% 14%, rgba(255,255,255,.3), transparent 48%),
+    linear-gradient(165deg, var(--g1), var(--g2));
+  box-shadow:
+    0 26px 60px -22px rgba(14,42,52,.55),
+    inset 0 2px 4px rgba(255,255,255,.5),
+    inset 0 -40px 56px -40px rgba(255,255,255,.5)}
+.glass-detail .letter-card .gd-title{color:rgba(255,255,255,.97);font-family:var(--font-hand);
+  letter-spacing:.12em;text-align:left;text-shadow:0 1px 10px rgba(0,0,0,.18)}
+.glass-detail .letter-card .gd-poet{color:rgba(255,255,255,.6);font-family:var(--font-hand);
+  letter-spacing:.24em;text-align:left;margin-bottom:30px}
+.glass-detail .letter-card .gd-body{font-family:var(--font-hand)}
+.glass-detail .letter-card .gd-body p{color:rgba(255,255,255,.93);font-family:var(--font-hand)}
+.glass-detail .letter-card .gd-body.as-poem{text-align:left;max-width:none}
+.glass-detail .letter-card .gd-body.as-story{text-align:left;max-width:none}
+.glass-detail .letter-card .gd-cover{margin-bottom:30px}
+
+@media (max-width:560px){
+  .glass-detail .letter-card{padding:36px 24px 30px}
+  .letter .lt-title{font-size:18px}
+}
+
+/* ============ 琉璃海滩 · 诗板 ============ */
+/* 短诗就是一块纯色竖板，不套卡片、不加高光和渐变：
+   底色取该信 hue 的亮面 --g1；标题宋体、日期细黑半透明、正文加粗宋体，
+   行距松，整体竖向居中、左对齐。 */
+.glass-detail .poem-plate{
+  container-type:inline-size;
+  width:100%;aspect-ratio:1/1.414;
+  background:var(--g1,#1c3346);
+  color:#fff;display:flex;align-items:center;
+  overflow:hidden;border-radius:0}
+.glass-detail .poem-plate__inner{width:100%;padding:6% 10% 6% 18%;text-align:left}
+.glass-detail .poem-plate__title{
+  margin:0 0 .55em;font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",serif;
+  font-weight:500;font-size:clamp(22px,4.6cqw,34px);letter-spacing:.02em;line-height:1.2;color:#fff}
+.glass-detail .poem-plate__date{
+  margin:0 0 .9em;font-family:"Noto Sans SC","Source Han Sans SC","PingFang SC","Helvetica Neue",sans-serif;
+  font-weight:200;font-size:clamp(13px,2.6cqw,19px);color:rgba(255,255,255,.55);white-space:pre}
+.glass-detail .poem-plate__body p{
+  margin:0;font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","SimSun",serif;
+  font-weight:700;font-size:clamp(16px,3.4cqw,26px);line-height:2.3;letter-spacing:.03em;color:#fff}
+.glass-detail .poem-plate__poet{
+  margin-top:1.6em;font-family:"Noto Sans SC","Source Han Sans SC","PingFang SC",sans-serif;
+  font-weight:200;font-size:clamp(12px,2.4cqw,16px);letter-spacing:.2em;color:rgba(255,255,255,.5)}
+@media (max-width:480px){
+  .glass-detail .poem-plate__inner{padding-left:14%}
+  .glass-detail .poem-plate__body p{line-height:2.1}
+}
+
+
+/* ============ 芳菲诗社 · 分社皮肤 ============ */
+/* 同一副刊头，换一张纸：纸底从海雾蓝挪向一点暖灰，印章改成胭脂。
+   用 .ff 包住子站所有页面，只改变量，不重写任何组件。 */
+.ff{--seal:#9A4A5C;--gold:#A88B6A}
+.ff .sheet-head .no{color:var(--seal)}
+.ff .hairline::after{background:var(--seal)}
+.ff .glass-submit-line a{color:var(--seal)}
+.ff .glass-submit-line a:hover,.ff .glass-back a:hover{border-bottom-color:var(--seal)}
+.ff .ff-sep{margin:0 10px;opacity:.5}
+.ff .gd-eyebrow{color:var(--seal)}
+.ff .pa-cap{color:var(--seal);opacity:.8}
