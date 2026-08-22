@@ -67,7 +67,7 @@ export default async function GlassDetail({ params }) {
         {audio ? (
           <div className="poem-audio">
             <div className="pa-cap">从这首诗里长出来的音乐</div>
-            <GlassTide src={audio} color={p.glass_color} />
+            <GlassTide src={audio} hue={p.letter_hue} color={p.glass_color} />
             {p.gen_note ? <p className="pa-note">{p.gen_note}</p> : null}
           </div>
         ) : (
