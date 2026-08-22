@@ -1,10 +1,10 @@
 'use client';
-// 芳菲诗社 · 编辑台。只有 ff_members.role = 'editor' 的人能看到待审稿并放行。
+// 港口甲 · 编辑台。只有 ff_members.role = 'editor' 的人能看到待审稿并放行。
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 
-export default function FangfeiDesk() {
+export default function Harbor ADesk() {
   const [user, setUser] = useState(undefined);
   const [editor, setEditor] = useState(false);
   const [rows, setRows] = useState([]);
@@ -45,26 +45,26 @@ export default function FangfeiDesk() {
   if (user === undefined) return null;
   if (!user) {
     return (
-      <main className="sheet ff"><div className="sheet-head">
-        <div className="no">Fangfei · Desk</div><div className="th">编辑台</div>
-        <div className="sub">先<Link href="/login" style={{ margin: '0 4px' }}>靠岸</Link>。</div>
-        <div className="hairline" /></div></main>
+      <main className="ff-main"><div className="ff-page-head">
+        <div className="ff-page-title">编辑台</div>
+        <div className="ff-page-sub">先<Link href="/login" style={{ margin: '0 4px' }}>靠岸</Link>。</div>
+        </div></main>
     );
   }
   if (!editor) {
     return (
-      <main className="sheet ff"><div className="sheet-head">
-        <div className="no">Fangfei · Desk</div><div className="th">编辑台</div>
-        <div className="sub">这里只有诗社的编辑能进。</div>
-        <div className="hairline" /></div></main>
+      <main className="ff-main"><div className="ff-page-head">
+        <div className="ff-page-title">编辑台</div>
+        <div className="ff-page-sub">这里只有诗社的编辑能进。</div>
+        </div></main>
     );
   }
   return (
-    <main className="sheet ff">
-      <div className="sheet-head">
-        <div className="no">Fangfei · Desk</div>
-        <div className="th">编辑台</div>
-        <div className="hairline" />
+    <main className="ff-main">
+      <div className="ff-page-head">
+        
+        <div className="ff-page-title">编辑台</div>
+        
       </div>
       <div className="me-tabs">
         {[['pending', '待读'], ['published', '已放上'], ['hidden', '已收起']].map(([v, l]) => (

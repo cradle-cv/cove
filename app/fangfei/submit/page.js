@@ -1,11 +1,11 @@
 'use client';
-// 芳菲诗社 · 投稿。登录后可投，进 pending，诗社编辑放行后出现。
+// 港口甲 · 投稿。登录后可投，进 pending，诗社编辑放行后出现。
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import AudioUploader from '@/components/AudioUploader';
 
-export default function FangfeiSubmit() {
+export default function Harbor ASubmit() {
   const [user, setUser] = useState(null);
   const [form, setForm] = useState({ poet_name: '', title: '', body: '', gen_note: '', audio: '' });
   const [msg, setMsg] = useState('');
@@ -35,36 +35,36 @@ export default function FangfeiSubmit() {
 
   if (user === null) {
     return (
-      <main className="sheet ff">
-        <div className="sheet-head">
-          <div className="no">Fangfei</div>
-          <div className="th">芳菲诗社</div>
-          <div className="sub">先<Link href="/login" style={{ margin: '0 4px' }}>靠岸</Link>，才能投稿。</div>
-          <div className="hairline" />
+      <main className="ff-main">
+        <div className="ff-page-head">
+          
+          <div className="ff-page-title">港口甲</div>
+          <div className="ff-page-sub">先<Link href="/login" style={{ margin: '0 4px' }}>靠岸</Link>，才能投稿。</div>
+          
         </div>
       </main>
     );
   }
   if (done) {
     return (
-      <main className="sheet ff">
-        <div className="sheet-head">
-          <div className="no">Fangfei</div>
-          <div className="th">送到了</div>
-          <div className="sub">诗社的编辑读过之后，它会出现在这里。</div>
-          <div className="hairline" />
+      <main className="ff-main">
+        <div className="ff-page-head">
+          
+          <div className="ff-page-title">送到了</div>
+          <div className="ff-page-sub">诗社的编辑读过之后，它会出现在这里。</div>
+          
         </div>
-        <p className="glass-back" style={{ textAlign: 'center' }}><Link href="/fangfei">回到诗社 →</Link></p>
+        <p className="ff-back" style={{ textAlign: 'center' }}><Link href="/fangfei">← 回到笺架</Link></p>
       </main>
     );
   }
   return (
-    <main className="sheet ff">
-      <div className="sheet-head">
-        <div className="no">Fangfei</div>
-        <div className="th">投一首</div>
-        <div className="sub">诗或短故事，可以配一段你用 AI 做出来的音乐。颜色由海水决定。</div>
-        <div className="hairline" />
+    <main className="ff-main">
+      <div className="ff-page-head">
+        
+        <div className="ff-page-title">投一首</div>
+        <div className="ff-page-sub">诗或短故事，可以配一段你用 AI 做出来的音乐。颜色由海水决定。</div>
+        
       </div>
       <div className="cove-form" style={{ maxWidth: 560, margin: '0 auto' }}>
         <label>署名</label>
