@@ -16,7 +16,10 @@ export default async function FestivalDetailPage({ params }) {
   if (!f) notFound();
 
   const roles = Array.isArray(f.roles_needed) ? f.roles_needed : [];
-  const beforeDeadline = f.deadline ? new Date(f.deadline) > new Date() : false;
+  const now = new Date();
+  const today = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Shanghai' }); // YYYY-MM-DD
+  const isPast = !!f.show_date && String(f.show_date).slice(0, 10) < today;
+  const beforeDeadline = f.deadline ? new Date(f.deadline) > now : false;
   const stateLine =
     f.status === 'completed' ? '这场演出已经成行。'
     : f.status === 'locked' || !beforeDeadline ? '报名已截稿，名单交给海。'
@@ -49,6 +52,10 @@ export default async function FestivalDetailPage({ params }) {
       ) : null}
 
       <p className="dredging">{stateLine}</p>
+      {isPast && f.status !== 'completed' ? (
+        <p className="dredging" style={{ paddingTop: 0 }}>这场演出的日期已经过去，邀请函留在这里作记录。</p>
+      ) : null}
+      {/* 报名区照常渲染：截稿后 SubmitForm 自己锁成只读，报过名的人仍能看到审阅结果（Rule B） */}
       <SubmitForm festival={f} />
     </main>
   );

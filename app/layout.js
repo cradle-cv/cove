@@ -3,6 +3,7 @@ import Link from 'next/link';
 import AvatarMenu from '@/components/AvatarMenu';
 import { LanguageProvider } from '@/components/i18n/LanguageContext';
 import LangToggle from '@/components/i18n/LangToggle';
+import SiteFooter from './SiteFooter';
 export const metadata = {
   title: '海角 Cove',
   description: '音乐人的避风港，也是一座灵感的灯塔。',
@@ -70,6 +71,7 @@ export default function RootLayout({ children }) {
           </Link>
         </header>
         {children}
+        <SiteFooter />
         </LanguageProvider>
       </body>
     </html>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { FESTIVAL_MATCH } from '@/lib/site/copy';
 
 export const revalidate = 120;
 export const metadata = { title: '每日演出 · Cove' };
@@ -26,8 +27,24 @@ export default async function FestivalPage() {
     .in('status', ['open', 'locked', 'completed'])
     .order('show_date', { ascending: true });
 
+  // 按日期把邀请函分成「还在路上的」和「已经过去的」：
+  // show_date 早于今天（北京时间）的归到页面下方，不再显示可报名；
+  // status 仍是 open 但截稿时间已过的，显示为「已截稿」。
+  const now = new Date();
+  const today = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Shanghai' }); // YYYY-MM-DD
+  const isPast = (f) => !!f.show_date && String(f.show_date).slice(0, 10) < today;
+  const stateOf = (f) => {
+    if (f.status === 'completed') return 'completed';
+    if (f.status === 'locked') return 'locked';
+    if (f.deadline && new Date(f.deadline) <= now) return 'locked';
+    return 'open';
+  };
+
+  const upcoming = (list || []).filter((f) => !isPast(f));
+  const past = (list || []).filter(isPast).sort((a, b) => (a.show_date < b.show_date ? 1 : -1));
+
   const byType = { gig_call: [], band_recruit: [], venue_offer: [] };
-  (list || []).forEach((f) => {
+  upcoming.forEach((f) => {
     (byType[f.invite_type] || byType.gig_call).push(f);
   });
 
@@ -58,8 +75,8 @@ export default async function FestivalPage() {
                   <span className="en">
                     {f.organizer_role ? `${ROLE_CN[f.organizer_role] || ''} · ` : ''}{f.venue || ''}
                   </span>
-                  {f.status !== 'completed' ? (
-                    <span className="special">{STATUS_CN[f.status]}</span>
+                  {stateOf(f) !== 'completed' ? (
+                    <span className="special">{STATUS_CN[stateOf(f)]}</span>
                   ) : null}
                   <span className="date">
                     {f.show_date ? new Date(f.show_date).toLocaleDateString('zh-CN') : ''}
@@ -72,6 +89,37 @@ export default async function FestivalPage() {
           )}
         </section>
       ))}
+
+      {past.length > 0 ? (
+        <section className="invite-block past">
+          <div className="invite-head">
+            <h3 className="invite-type">已经过去的演出</h3>
+            <span className="invite-desc">演出日期已过，这些邀请函只留作记录，不再接受报名</span>
+          </div>
+          <div className="shelf">
+            {past.map((f) => (
+              <Link key={f.id} href={`/festival/${f.id}`}>
+                <span className="th">{f.title}</span>
+                <span className="en">
+                  {TYPE_CN[f.invite_type]?.label || ''}{f.venue ? ` · ${f.venue}` : ''}
+                </span>
+                <span className="gone">{f.status === 'completed' ? '已成行' : '已过去'}</span>
+                <span className="date">
+                  {f.show_date ? new Date(f.show_date).toLocaleDateString('zh-CN') : ''}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <section className="match-note">
+        <h4>{FESTIVAL_MATCH.title}</h4>
+        <p>
+          {FESTIVAL_MATCH.p}
+          <Link href="/apply">去身份申请页 →</Link>
+        </p>
+      </section>
 
       <p className="dredging">下一封邀请函还在写</p>
     </main>
