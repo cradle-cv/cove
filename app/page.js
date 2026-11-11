@@ -106,6 +106,18 @@ export default async function HomePage() {
           <span className="hl-cn">音乐人</span>
           <span className="hl-desc">停靠过这里的人</span>
         </Link>
+        <Link href="/glass">
+          <span className="hl-cn">琉璃海滩</span>
+          <span className="hl-desc">一首诗，和从诗里长出来的音乐</span>
+        </Link>
+        <Link href="/radio">
+          <span className="hl-cn">海角电台</span>
+          <span className="hl-desc">专访与编辑部的手记</span>
+        </Link>
+        <Link href="/lighthouse">
+          <span className="hl-cn">灯塔</span>
+          <span className="hl-desc">七层，随期数逐层点亮</span>
+        </Link>
       </section>
     </main>
   );

@@ -29,17 +29,21 @@ export default async function HarborsPage() {
                 <span className="th">{p.name}</span>
                 <span className="en">{p.kind || ''}</span>
                 <span className="date">{p.city || ''}</span>
+                {p.intro ? <span className="harbor-intro">{p.intro}</span> : null}
               </>
             );
             return internal ? (
-              <Link key={p.id} href={p.link_url}>{inner}</Link>
+              <Link key={p.id} href={p.link_url} className={p.intro ? 'has-intro' : undefined}>{inner}</Link>
             ) : (
-              <a key={p.id} href={p.link_url || '#'} target="_blank" rel="noreferrer">{inner}</a>
+              <a key={p.id} href={p.link_url || '#'} target="_blank" rel="noreferrer" className={p.intro ? 'has-intro' : undefined}>{inner}</a>
             );
           })}
         </div>
       ) : null}
       <p className="dredging">邻港的灯亮着，等船来</p>
+      <p className="prose-cta">
+        <Link href="/harbors/open">诗社、乐队和厂牌，也可以在海角开一座港 →</Link>
+      </p>
     </main>
   );
 }
